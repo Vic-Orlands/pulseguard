@@ -445,14 +445,14 @@ const CTA = () => (
         </Badge>
 
         <h2 className="text-3xl md:text-4xl font-bold leading-tight my-4">
-          Publish better monitoring insights,
+          Start monitoring your application
           <br />
-          10x faster
+          errors easily
         </h2>
 
         <p className="text-md text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8">
-          Less tool-hopping. More insights delivered, clean, actionable,
-          comprehensive, and ready to help you build better applications.
+          Observe application metrics and performance. Debug and trace errors. Get more insights. All in a clean,
+          comprehensive, and easy-to-use platform.
         </p>
 
         <motion.button

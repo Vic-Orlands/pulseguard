@@ -1,19 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { TelemetryProvider } from "@/components/telemetry-provider";
-import { AuthProvider } from "@/context/auth-context";
-import { setProjectId } from "@/lib/telemetry/client-error-tracking";
-
-// Set projectId globally
-const currentProjectId = process.env.NEXT_PUBLIC_PROJECT_ID;
-const trackerUrl = process.env.NEXT_PUBLIC_ISSUE_TRACKER_URL;
-
-if (!currentProjectId) {
-  console.error("Missing NEXT_PUBLIC_PROJECT_ID environment variable");
-}
-setProjectId(currentProjectId);
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import AnimatedBackground from "@/components/background-color";
 
 const geistSans = Inter({
   variable: "--font-inter",
@@ -25,13 +15,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pulseguard.dev";
+const baseUrl = "https://pulseguard.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: "PulseGuard",
   description:
-    "An intelligent, error tracking and monitoring tool for your web apps.",
+    "A full-stack error tracking and monitoring tool for your web apps.",
   icons: {
     icon: "/icon",
     shortcut: "/icon",
@@ -40,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PulseGuard",
     description:
-      "An intelligent, error tracking and monitoring tool for your web apps.",
+      "A full-stack error tracking and monitoring tool for your web apps.",
     url: baseUrl,
     siteName: "PulseGuard",
     images: [
@@ -74,13 +64,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TelemetryProvider
-          projectId={currentProjectId}
-          issueTrackerUrl={trackerUrl}
-        >
-          <AuthProvider>{children}</AuthProvider>
-        </TelemetryProvider>
-        <Toaster />
+        <Navbar />
+        <div className="min-h-screen">
+          <AnimatedBackground />
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );

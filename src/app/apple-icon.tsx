@@ -4,23 +4,23 @@ export const size = {
   width: 180,
   height: 180,
 };
+
 export const contentType = "image/png";
 
-export default function AppleIcon() {
+export default function Icon() {
   return new ImageResponse(
     (
       <div
         style={{
-          display: "inline-block",
-          verticalAlign: "middle",
-          position: "relative",
-          marginRight: "0.5rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <svg
-          viewBox="0 0 200 60"
+          viewBox="0 6 200 60"
           xmlns="http://www.w3.org/2000/svg"
-          style={{ height: "60px", width: "200px" }}
+          style={{ height: "50px", width: "200px" }}
         >
           <defs>
             <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -56,8 +56,6 @@ export default function AppleIcon() {
         </svg>
       </div>
     ),
-    {
-      ...size,
-    }
+    size
   );
 }

@@ -3,7 +3,6 @@ import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import AnimatedBackground from "@/components/background-color";
 
 const geistSans = Inter({
   variable: "--font-inter",
@@ -65,10 +64,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        <div className="min-h-screen">
-          <AnimatedBackground />
-          {children}
-        </div>
+        <div className="min-h-screen">{children}</div>
         <Footer />
       </body>
     </html>

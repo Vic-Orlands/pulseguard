@@ -1,8 +1,8 @@
-# PulseGuard Landing
+# PulseGuard
 
 ## Overview
 
-PulseGuard(AppLog) is a full-stack observability and telemetry platform for modern cloud applications. It integrates structured logging, distributed tracing, and metrics collection into a unified observability pipeline using OpenTelemetry and Grafana's ecosystem (Loki, Tempo, Prometheus, and Grafana).
+PulseGuard is a full-stack observability and telemetry platform for modern cloud applications. It integrates structured logging, distributed tracing, and metrics collection into a unified observability pipeline using OpenTelemetry and Grafana's ecosystem (Loki, Tempo, Prometheus, and Grafana).
 
 ---
 

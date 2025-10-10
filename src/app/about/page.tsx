@@ -8,11 +8,11 @@ export default function AboutPage() {
   const [openModal, setOpenModal] = useState(false);
 
   return (
-    <section className="max-w-7xl border-x border-slate-700 m-auto px-5 relative text-white">
+    <section className="max-w-7xl border-x border-slate-600/50 m-auto px-5 relative text-white">
       <div className="relative z-10 px-4 py-16 pt-28">
         <div className="mb-24">
           <motion.h1
-            className="text-2xl text-center mb-4 md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-pink-500"
+            className="text-2xl text-center mb-4 md:text-3xl font-bold text-blue-400"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -21,12 +21,12 @@ export default function AboutPage() {
           </motion.h1>
 
           {/* Architectural Diagram */}
-          <div className="relative bg-gray-800/50 rounded-xl p-8 border border-gray-700 text-sm">
+          <div className="relative bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-600/50 text-sm">
             {/* Diagram Components */}
             <div className="grid grid-cols-5 gap-4 items-center">
               {/* Application */}
               <motion.div
-                className="bg-indigo-500/20 p-4 rounded-lg border border-indigo-400 text-center"
+                className="bg-indigo-500/20 p-4 rounded-lg border border-indigo-400/50 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
@@ -73,7 +73,7 @@ export default function AboutPage() {
 
               {/* PulseGuard Collector */}
               <motion.div
-                className="bg-pink-500/20 p-4 rounded-lg border border-pink-400 text-center"
+                className="bg-pink-500/20 p-4 rounded-lg border border-pink-400/50 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.5 }}
@@ -120,7 +120,7 @@ export default function AboutPage() {
 
               {/* Processing Pipeline */}
               <motion.div
-                className="bg-green-500/20 p-4 rounded-lg border border-green-400 text-center"
+                className="bg-green-500/20 p-4 rounded-lg border border-green-400/50 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.0, duration: 0.5 }}
@@ -154,10 +154,10 @@ export default function AboutPage() {
                 transition={{ delay: 1.1, duration: 0.5 }}
               >
                 <motion.div
-                  className="absolute h-1 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full"
+                  className="absolute h-1 bg-blue-500 rounded-full"
                   style={{ width: "100%" }}
                   animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    opacity: [0.3, 1, 0.3],
                   }}
                   transition={{
                     duration: 3,
@@ -174,7 +174,7 @@ export default function AboutPage() {
                 (item, index) => (
                   <motion.div
                     key={index}
-                    className="bg-purple-500/20 p-4 rounded-lg border border-purple-400 text-center"
+                    className="bg-purple-500/20 p-4 rounded-lg border border-purple-400/50 text-center"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1.2 + index * 0.1, duration: 0.5 }}
@@ -218,7 +218,7 @@ export default function AboutPage() {
                   <motion.path
                     d="M50,0 Q300,50 400,100"
                     fill="none"
-                    stroke="url(#gradient)"
+                    stroke="#6366F1"
                     strokeWidth="2"
                     strokeDasharray="10 5"
                     initial={{ pathLength: 0 }}
@@ -233,7 +233,7 @@ export default function AboutPage() {
                   <motion.path
                     d="M400,0 L400,100"
                     fill="none"
-                    stroke="url(#gradient)"
+                    stroke="#6366F1"
                     strokeWidth="2"
                     strokeDasharray="10 5"
                     initial={{ pathLength: 0 }}
@@ -248,7 +248,7 @@ export default function AboutPage() {
                   <motion.path
                     d="M750,0 Q500,50 400,100"
                     fill="none"
-                    stroke="url(#gradient)"
+                    stroke="#6366F1"
                     strokeWidth="2"
                     strokeDasharray="10 5"
                     initial={{ pathLength: 0 }}
@@ -260,51 +260,9 @@ export default function AboutPage() {
                       ease: "easeInOut",
                     }}
                   />
-                  <motion.path
-                    d="M400,0 450,2500,100"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="2"
-                    strokeDasharray="10 5"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut",
-                    }}
-                  />
-                  <motion.path
-                    d="M750,0 Q500,50 400,100"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="2"
-                    strokeDasharray="10 5"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut",
-                    }}
-                  />
-                  <defs>
-                    <linearGradient
-                      id="gradient"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="0%"
-                    >
-                      <stop offset="0%" stopColor="#6366F1" />
-                      <stop offset="100%" stopColor="#EC4899" />
-                    </linearGradient>
-                  </defs>
                 </motion.svg>
 
-                <div className="bg-blue-500/20 p-6 rounded-lg border border-blue-400 text-center relative z-10">
+                <div className="bg-blue-500/20 p-6 rounded-lg border border-blue-400/50 text-center relative z-10">
                   <div className="w-20 h-20 mx-auto mb-4 bg-blue-500 rounded-lg flex items-center justify-center">
                     <svg
                       className="w-10 h-10 text-white"
@@ -321,7 +279,7 @@ export default function AboutPage() {
                     </svg>
                   </div>
                   <p className="text-white font-medium text-xl">Dashboard</p>
-                  <p className="text-gray-300 mt-2">
+                  <p className="text-slate-300 mt-2">
                     Real-time visualization & alerts
                   </p>
                 </div>
@@ -333,7 +291,7 @@ export default function AboutPage() {
           <div className="flex justify-center mt-8">
             <button
               onClick={() => setOpenModal(true)}
-              className="cursor-pointer px-6 py-2 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
+              className="cursor-pointer px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-sm font-medium transition-all duration-200"
             >
               View Detailed Architecture
             </button>
@@ -350,8 +308,8 @@ export default function AboutPage() {
             />
 
             {/* Modal Content */}
-            <div className="relative w-[90vw] h-[90vh] bg-gray-900 rounded-xl">
-              <div className="p-6 border-b border-gray-700">
+            <div className="relative w-[90vw] h-[90vh] bg-slate-900 rounded-xl border border-slate-600/50">
+              <div className="p-6 border-b border-slate-600/50">
                 <motion.h2
                   className="text-xl font-bold text-white"
                   initial={{ opacity: 0 }}
@@ -362,7 +320,7 @@ export default function AboutPage() {
                 </motion.h2>
                 <button
                   onClick={() => setOpenModal(false)}
-                  className="cursor-pointer absolute top-4 right-4 text-gray-400 hover:text-white"
+                  className="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-white"
                 >
                   <svg
                     className="w-6 h-6"
@@ -394,7 +352,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <motion.div
-              className="bg-gray-800/50 rounded-xl p-6 border border-gray-700"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-600/50"
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -406,7 +364,7 @@ export default function AboutPage() {
                 </span>
                 Error Detection
               </h3>
-              <p className="text-gray-300 text-sm">
+              <p className="text-slate-300 text-sm">
                 PulseGuard agents monitor your applications in real-time,
                 capturing errors with full stack traces, context, and
                 environmental data. Our lightweight SDKs support all major
@@ -415,7 +373,7 @@ export default function AboutPage() {
             </motion.div>
 
             <motion.div
-              className="bg-gray-800/50 rounded-xl p-6 border border-gray-700"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-600/50"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -427,7 +385,7 @@ export default function AboutPage() {
                 </span>
                 Context Enrichment
               </h3>
-              <p className="text-gray-300 text-sm">
+              <p className="text-slate-300 text-sm">
                 Each error is automatically enriched with relevant logs (Loki),
                 distributed traces (Tempo), and metrics (Prometheus) from the
                 same time period, giving you complete debugging context.
@@ -435,7 +393,7 @@ export default function AboutPage() {
             </motion.div>
 
             <motion.div
-              className="bg-gray-800/50 rounded-xl p-6 border border-gray-700"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-600/50"
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -447,7 +405,7 @@ export default function AboutPage() {
                 </span>
                 Intelligent Processing
               </h3>
-              <p className="text-gray-300 text-sm">
+              <p className="text-slate-300 text-sm">
                 Our pipeline groups similar errors, calculates impact scores,
                 and correlates with deployment markers. Machine learning
                 identifies emerging patterns before they become critical.
@@ -455,7 +413,7 @@ export default function AboutPage() {
             </motion.div>
 
             <motion.div
-              className="bg-gray-800/50 rounded-xl p-6 border border-gray-700"
+              className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-600/50"
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -467,7 +425,7 @@ export default function AboutPage() {
                 </span>
                 Visualization & Alerting
               </h3>
-              <p className="text-gray-300 text-sm">
+              <p className="text-slate-300 text-sm">
                 The unified dashboard shows error trends, affected users, and
                 correlated telemetry. Custom alerts notify teams through Slack,
                 email, or PagerDuty based on severity.
@@ -477,7 +435,7 @@ export default function AboutPage() {
         </div>
 
         {/* Value Proposition */}
-        <div className="bg-gradient-to-r from-indigo-500/10 to-pink-500/10 rounded-xl p-8 border border-indigo-400/30">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-600/50">
           <motion.h2
             className="text-xl font-bold text-white mb-6 text-center"
             initial={{ opacity: 0 }}
@@ -511,7 +469,7 @@ export default function AboutPage() {
             ].map((item, index) => (
               <motion.div
                 key={index}
-                className="bg-gray-800/50 rounded-lg p-6 border border-gray-700"
+                className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-6 border border-slate-600/50"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
@@ -535,7 +493,7 @@ export default function AboutPage() {
                 <h3 className="text-md font-bold text-white mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-300 text-sm">{item.description}</p>
+                <p className="text-slate-300 text-sm">{item.description}</p>
               </motion.div>
             ))}
           </div>

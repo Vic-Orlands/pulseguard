@@ -1,7 +1,7 @@
 "use client";
 
 import { ForwardRefExoticComponent, RefAttributes, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import Image, { StaticImageData } from "next/image";
 import {
@@ -55,33 +55,35 @@ const FeatureDetailSidebar: React.FC<FeatureDetails> = ({
       exit={{ opacity: 0, x: isLeft ? 20 : -20 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="bg-gray-950 rounded-2xl shadow-xl p-6 space-y-4 border border-slate-700">
+      <div className="bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 space-y-4 border border-slate-600/50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center">
-            <feature.icon className="h-5 w-5 text-gray-400" />
+          <div className="w-10 h-10 bg-slate-700/80 rounded-xl flex items-center justify-center">
+            <feature.icon className="h-5 w-5 text-blue-400" />
           </div>
-          <h3 className="text-lg font-semibold">{feature.title}</h3>
+          <h3 className="text-lg font-semibold text-slate-100">
+            {feature.title}
+          </h3>
         </div>
 
-        <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+        <p className="text-slate-300 leading-relaxed">{feature.description}</p>
 
         <div className="space-y-2">
-          <h4 className="font-medium">Key Features:</h4>
+          <h4 className="font-medium text-slate-200">Key Features:</h4>
           <ul className="space-y-1">
             {feature.details.map((detail, i) => (
               <li
                 key={i}
-                className="text-sm text-gray-400 flex items-center gap-2"
+                className="text-sm text-slate-300 flex items-center gap-2"
               >
-                <div className="w-1 h-1 bg-gray-400 rounded-full" />
+                <div className="w-1 h-1 bg-blue-400 rounded-full" />
                 {detail}
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="pt-3 border-t border-gray-700">
-          <button className="text-sm font-medium hover:underline">
+        <div className="pt-3 border-t border-slate-600/50">
+          <button className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">
             Learn more →
           </button>
         </div>
@@ -100,25 +102,25 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Badge className="gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border border-blue-500/30">
-            <div className="w-2 h-2 bg-green-500 rounded-full" />
+          <Badge className="gap-2 px-3 py-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/40">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
             Built for modern application monitoring
           </Badge>
         </motion.div>
 
         <motion.h1
-          className="text-4xl md:text-5xl font-bold leading-tight"
+          className="text-4xl md:text-5xl font-bold leading-tight text-slate-100"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
           Full-Stack observability,
           <br />
-          <span className="text-gray-400">for Modern Apps.</span>
+          <span className="text-slate-400">for Modern Apps.</span>
         </motion.h1>
 
         <motion.p
-          className="text-md text-gray-400 max-w-3xl mx-auto leading-relaxed"
+          className="text-md text-slate-300 max-w-3xl mx-auto leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
@@ -135,7 +137,7 @@ const Hero = () => {
           transition={{ delay: 0.5 }}
         >
           <motion.button
-            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm rounded-lg font-medium transition-colors duration-200"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-lg font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
             whileTap={{ scale: 0.95 }}
           >
             Start Monitoring for Free
@@ -145,7 +147,7 @@ const Hero = () => {
               (window.location.href =
                 "https://github.com/Vic-Orlands/pulseguard-app")
             }
-            className="px-6 py-3 text-slate-300 hover:text-slate-400 transition-colors duration-200 font-medium flex items-center gap-2"
+            className="px-6 py-3 text-slate-300 hover:text-slate-100 transition-colors duration-200 font-medium flex items-center gap-2 border border-slate-600/50 rounded-lg hover:border-slate-500/50 hover:bg-slate-800/30"
             whileTap={{ scale: 0.95 }}
           >
             How to use PulseGuard?
@@ -161,11 +163,11 @@ const Hero = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <div className="rounded-2xl overflow-hidden p-3 bg-gray-950/40 border border-slate-700">
+        <div className="rounded-2xl overflow-hidden p-3 bg-slate-800/50 backdrop-blur-sm border border-slate-600/50 shadow-2xl">
           <Image
             src={ErrorPage}
             alt="error page"
-            className="border border-gray-800"
+            className="border border-slate-700/70 rounded-lg"
           />
         </div>
       </motion.div>
@@ -184,10 +186,10 @@ const LessFriction = () => {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+        <h2 className="text-3xl md:text-4xl font-bold leading-tight text-slate-100">
           Less friction. More creation.
         </h2>
-        <p className="text-md text-gray-400 max-w-4xl mx-auto leading-relaxed">
+        <p className="text-md text-slate-300 max-w-4xl mx-auto leading-relaxed">
           The average development team uses 5+ tools to inefficiently manage
           application monitoring. PulseGuard provides one place to monitor,
           debug, and optimize application performance, with built-in support for
@@ -238,24 +240,26 @@ const LessFriction = () => {
         ].map((feature, index) => (
           <motion.div
             key={feature.title}
-            className="space-y-4"
+            className="space-y-4 group"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
           >
-            <div className="bg-gray-950/40 rounded-lg p-3 border border-gray-950">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-3 border border-slate-600/50 group-hover:border-blue-500/50 transition-all duration-300">
               <Image
                 src={feature.image}
                 alt={feature.title}
                 width={300}
                 height={300}
-                className="w-full h-auto border border-gray-800"
+                className="w-full h-auto border border-slate-700/70 rounded-md"
               />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <p className="text-gray-400 leading-relaxed">
+              <h3 className="text-xl font-semibold text-slate-100">
+                {feature.title}
+              </h3>
+              <p className="text-slate-300 leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -366,12 +370,12 @@ const InteractiveFeatures = () => {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+        <h2 className="text-3xl md:text-4xl font-bold leading-tight text-slate-100">
           Everything You Need to Monitor
           <br />
-          <span className="text-gray-400">Modern Applications</span>
+          <span className="text-slate-400">Modern Applications</span>
         </h2>
-        <p className="text-md text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-md text-slate-300 max-w-2xl mx-auto leading-relaxed">
           From error tracking to performance monitoring, get complete visibility
           into your application's health and user experience.
         </p>
@@ -379,7 +383,7 @@ const InteractiveFeatures = () => {
 
       <div className="space-y-8 relative">
         {/* Vertical line in center */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-700 transform -translate-x-1/2" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-blue-500/30 transform -translate-x-1/2" />
 
         {features.map((feature, index) => {
           const isLeft = index % 2 === 0;
@@ -395,7 +399,7 @@ const InteractiveFeatures = () => {
               viewport={{ once: true }}
             >
               <div
-                className={`w-[48.5%] rounded-2xl p-3 bg-gray-950/40 border border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer relative ${
+                className={`w-[48.5%] rounded-2xl p-3 bg-slate-800/50 backdrop-blur-sm border border-slate-600/50 shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/50 transition-all duration-300 cursor-pointer relative ${
                   isLeft ? "mr-auto" : "ml-auto"
                 }`}
                 onMouseEnter={() => setHoveredFeature(index)}
@@ -404,15 +408,17 @@ const InteractiveFeatures = () => {
                 <Image
                   src={feature.image}
                   alt={feature.title}
-                  className="rounded-md border border-gray-800"
+                  className="rounded-md border border-slate-700/70"
                 />
                 <div className="flex items-center gap-4 my-3">
                   <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
                     <feature.icon className="h-5 w-5 text-blue-400" />
                   </div>
-                  <h3 className="text-lg font-semibold">{feature.title}</h3>
+                  <h3 className="text-lg font-semibold text-slate-100">
+                    {feature.title}
+                  </h3>
                 </div>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-slate-300 text-sm leading-relaxed">
                   {feature.description}
                 </p>
 
@@ -439,24 +445,25 @@ const CTA = () => (
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <Badge className="gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border border-blue-500/30">
-          <div className="w-2 h-2 bg-green-500 rounded-full" />
+        <Badge className="gap-2 px-3 py-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/40">
+          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
           What're you waiting for?
         </Badge>
 
-        <h2 className="text-3xl md:text-4xl font-bold leading-tight my-4">
+        <h2 className="text-3xl md:text-4xl font-bold leading-tight my-4 text-slate-100">
           Start monitoring your application
           <br />
           errors easily
         </h2>
 
-        <p className="text-md text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8">
-          Observe application metrics and performance. Debug and trace errors. Get more insights. All in a clean,
-          comprehensive, and easy-to-use platform.
+        <p className="text-md text-slate-300 max-w-2xl mx-auto leading-relaxed mb-8">
+          Observe application metrics and performance. Debug and trace errors.
+          Get more insights. All in a clean, comprehensive, and easy-to-use
+          platform.
         </p>
 
         <motion.button
-          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm rounded-lg font-medium transition-colors duration-200"
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-lg font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
           whileTap={{ scale: 0.95 }}
         >
           Start Monitoring for Free
@@ -466,12 +473,10 @@ const CTA = () => (
   </section>
 );
 
-// Footer
-
 // Main Homepage Component
 export default function Homepage() {
   return (
-    <section className="max-w-7xl border-x border-slate-700 m-auto px-5 relative text-white">
+    <section className="max-w-7xl border-x border-slate-600/50 m-auto px-5 relative text-white">
       <Hero />
       <LessFriction />
       <InteractiveFeatures />

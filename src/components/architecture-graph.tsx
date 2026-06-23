@@ -1,9 +1,17 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AiNetworkIcon, ArrowDown01Icon, CpuIcon, DatabaseIcon, Layers01Icon, LayoutGridIcon, RadioIcon } from "@hugeicons/core-free-icons";
+import {
+  ArrowDown01Icon,
+  CpuIcon,
+  DatabaseIcon,
+  Layers01Icon,
+  LayoutGridIcon,
+  RadioIcon,
+} from "@hugeicons/core-free-icons";
 import { useState } from "react";
 import { useTheme } from "next-themes";
+import { Network } from "lucide-react";
 
 const nodes = {
   app: {
@@ -19,7 +27,7 @@ const nodes = {
   otel: {
     name: "OpenTelemetry Collector",
     sub: "Filtering and routing",
-    icon: AiNetworkIcon,
+    icon: Network,
     details: [
       "Accepts OTLP HTTP and gRPC telemetry records",
       "Batches events and applies memory-aware processing",
@@ -100,7 +108,15 @@ function NodeButton({
         borderColor: active ? "#ff5a1f" : isDark ? "#3b3b3b" : "#dfdfda",
       }}
     >
-      <HugeiconsIcon icon={Icon} className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
+      {nodeKey === "otel" ? (
+        <Network className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
+      ) : (
+        <HugeiconsIcon
+          icon={Icon as any}
+          className="mx-auto mb-1.5 text-[#ff5a1f]"
+          size={16}
+        />
+      )}
       <span
         className="block text-xs font-medium text-[#272725] dark:text-white"
         style={{ color: isDark ? "#f5f5f5" : "#272725" }}
@@ -151,7 +167,11 @@ export function ArchitectureGraph() {
               onClick={() => setActiveKey("app")}
             />
           </div>
-          <HugeiconsIcon icon={ArrowDown01Icon} className="mx-auto my-3 text-[#b1b1ac] dark:text-[#4a4a4a]" size={16} />
+          <HugeiconsIcon
+            icon={ArrowDown01Icon}
+            className="mx-auto my-3 text-[#b1b1ac] dark:text-[#4a4a4a]"
+            size={16}
+          />
           <div className="flex justify-center">
             <NodeButton
               nodeKey="otel"
@@ -217,7 +237,11 @@ export function ArchitectureGraph() {
               className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b]"
               style={{ borderColor }}
             >
-              <HugeiconsIcon icon={ActiveIcon} size={18} />
+              {activeNode.name === "OpenTelemetry Collector" ? (
+                <Network size={18} />
+              ) : (
+                <HugeiconsIcon icon={ActiveIcon as any} size={18} />
+              )}
             </span>
           </div>
           <ul className="mt-6 space-y-4">

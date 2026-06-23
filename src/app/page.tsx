@@ -5,7 +5,7 @@ import {
   ArrowRight01Icon,
   ClipboardIcon,
   Delete02Icon,
-  MoonIcon,
+  Moon02Icon,
   Sun01Icon,
   TerminalIcon,
   Tick01Icon,
@@ -178,7 +178,7 @@ export default function Homepage() {
                 {theme === "dark" ? (
                   <HugeiconsIcon icon={Sun01Icon} size={14} />
                 ) : (
-                  <HugeiconsIcon icon={MoonIcon} size={14} />
+                  <HugeiconsIcon icon={Moon02Icon} size={14} />
                 )}
               </button>
             )}

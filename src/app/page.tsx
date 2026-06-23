@@ -1,486 +1,725 @@
 "use client";
 
-import { ForwardRefExoticComponent, RefAttributes, useState } from "react";
-import { motion } from "motion/react";
-import { Badge } from "@/components/ui/badge";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   ArrowRight,
-  GitBranch,
-  Activity,
-  Eye,
-  Users,
-  Bell,
-  Database,
-  LucideProps,
+  Check,
+  ChevronRight,
+  Clipboard,
+  Moon,
+  Sun,
+  Terminal,
+  Trash2,
 } from "lucide-react";
-import LogPage from "@/assets/logs.png";
-import TracePage from "@/assets/trace.png";
-import ErrorPage from "@/assets/errors.png";
-import OverviewPage from "@/assets/overview.png";
-import PerformancePage from "@/assets/metrics.png";
-import AlertsPage from "@/assets/installation.png";
-import LogDetailsPage from "@/assets/log-details.png";
-import ErrorDetailPage from "@/assets/error-details.png";
-import TraceDetailsPage from "@/assets/trace-details.png";
-import DistributedPage from "@/assets/distributed-tracing.png";
+import { AnimatePresence, motion } from "motion/react";
+import { PulseGuardLogo } from "@/components/Icons";
+import { LandingFaq } from "@/components/faq";
+import { ArchitectureGraph } from "@/components/architecture-graph";
+import { PipelineSandbox } from "@/components/pipeline-sandbox";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  NewTwitterIcon,
+  Mail01Icon,
+  GithubIcon,
+  Linkedin02Icon,
+} from "@hugeicons/core-free-icons";
+import clsx from "clsx";
 
-type Features = {
-  icon: ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-  >;
-  image: StaticImageData;
-  title: string;
-  description: string;
-  details: string[];
+type Tab = "react" | "node" | "go";
+type EventType = "error" | "log" | "metric" | "trace";
+type IntegrationView = "instrument" | "telemetry";
+type SignalView = "arrivals" | "architecture";
+type FeedItem = {
+  id: string;
+  type: EventType;
+  timestamp: string;
+  payload: string;
 };
 
-type FeatureDetails = {
-  feature: Features;
-  isLeft: boolean;
+const samples: Record<Tab, string> = {
+  react: `import { TelemetryProvider } from "@pulseguard/react";
+
+export default function RootLayout({ children }) {
+  return <TelemetryProvider projectId="your-project-id">{children}</TelemetryProvider>;
+}`,
+  node: `import { NodeSDK } from "@opentelemetry/sdk-node";
+
+const sdk = new NodeSDK({ serviceName: "checkout-api" });
+sdk.start();`,
+  go: `shutdown, err := otel.Init(ctx, otel.Config{
+  ProjectID: "your-project-id",
+  Service: "checkout-api",
+})
+defer shutdown(ctx)`,
 };
 
-// Feature Detail Sidebar
-const FeatureDetailSidebar: React.FC<FeatureDetails> = ({
-  feature,
-  isLeft,
-}) => {
+const dashboardScreens = ["overview", "logs", "traces", "errors", "metrics"];
+
+function SoftSignal() {
   return (
-    <motion.div
-      className={`absolute top-0 bottom-0 flex z-40 w-full ${
-        isLeft ? "left-full ml-10" : "right-full mr-10"
-      }`}
-      initial={{ opacity: 0, x: isLeft ? 20 : -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: isLeft ? 20 : -20 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 space-y-4 border border-slate-600/50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-slate-700/80 rounded-xl flex items-center justify-center">
-            <feature.icon className="h-5 w-5 text-blue-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-slate-100">
-            {feature.title}
-          </h3>
-        </div>
-
-        <p className="text-slate-300 leading-relaxed">{feature.description}</p>
-
-        <div className="space-y-2">
-          <h4 className="font-medium text-slate-200">Key Features:</h4>
-          <ul className="space-y-1">
-            {feature.details.map((detail, i) => (
-              <li
-                key={i}
-                className="text-sm text-slate-300 flex items-center gap-2"
-              >
-                <div className="w-1 h-1 bg-blue-400 rounded-full" />
-                {detail}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="pt-3 border-t border-slate-600/50">
-          <button className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">
-            Learn more →
-          </button>
-        </div>
-      </div>
-    </motion.div>
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-[46%] opacity-40 [background-image:radial-gradient(circle_at_50%_100%,rgba(255,90,31,.14),transparent_44%),linear-gradient(90deg,transparent_0,rgba(223,223,218,.36)_1px,transparent_1px),linear-gradient(transparent_0,rgba(223,223,218,.36)_1px,transparent_1px)] [background-size:auto,78px_100%,100%_62px]"
+    />
   );
-};
+}
 
-// Hero Section
-const Hero = () => {
-  return (
-    <section className="pt-32 pb-20">
-      <div className="text-center space-y-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Badge className="gap-2 px-3 py-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/40">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            Built for modern application monitoring
-          </Badge>
-        </motion.div>
+export default function Homepage() {
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [tab, setTab] = useState<Tab>("react");
+  const [copied, setCopied] = useState(false);
+  const [feed, setFeed] = useState<FeedItem[]>([]);
+  const [integrationView, setIntegrationView] =
+    useState<IntegrationView>("instrument");
+  const [integrationDirection, setIntegrationDirection] = useState(1);
+  const [signalView, setSignalView] = useState<SignalView>("arrivals");
+  const [signalDirection, setSignalDirection] = useState(1);
+  const [activeScreen, setActiveScreen] = useState(0);
+  const feedRef = useRef<HTMLDivElement>(null);
 
-        <motion.h1
-          className="text-4xl md:text-5xl font-bold leading-tight text-slate-100"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          Full-Stack observability,
-          <br />
-          <span className="text-slate-400">for Modern Apps.</span>
-        </motion.h1>
+  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    if (feedRef.current)
+      feedRef.current.scrollTop = feedRef.current.scrollHeight;
+  }, [feed]);
+  useEffect(() => {
+    const timer = window.setInterval(
+      () =>
+        setActiveScreen((current) => (current + 1) % dashboardScreens.length),
+      4500,
+    );
+    return () => window.clearInterval(timer);
+  }, []);
 
-        <motion.p
-          className="text-md text-slate-300 max-w-3xl mx-auto leading-relaxed"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          PulseGuard is a comprehensive observability platform built for
-          developers, technical teams, and creators. Track, monitor, debug, and
-          optimize application performance without friction.
-        </motion.p>
+  const authenticate = (mode: "login" | "signup") => {
+    localStorage.setItem("auth_mode", mode);
+    router.push("/signin");
+  };
 
-        <motion.div
-          className="flex flex-col sm:flex-row justify-center gap-4 pt-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <motion.button
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-lg font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
-            whileTap={{ scale: 0.95 }}
-          >
-            Start Monitoring for Free
-          </motion.button>
-          <motion.button
-            onClick={() =>
-              (window.location.href =
-                "https://github.com/Vic-Orlands/pulseguard-app")
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(samples[tab]);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  };
+
+  const selectIntegrationView = (view: IntegrationView) => {
+    if (view === integrationView) return;
+    setIntegrationDirection(view === "telemetry" ? 1 : -1);
+    setIntegrationView(view);
+  };
+
+  const selectSignalView = (view: SignalView) => {
+    if (view === signalView) return;
+    setSignalDirection(view === "architecture" ? 1 : -1);
+    setSignalView(view);
+  };
+
+  const dispatch = (type: EventType) => {
+    const payload =
+      type === "error"
+        ? {
+            type: "TypeError",
+            route: "/checkout",
+            message: "Cannot read user_id",
+          }
+        : type === "log"
+          ? {
+              level: "warn",
+              service: "checkout-api",
+              message: "Connection pool above threshold",
             }
-            className="px-6 py-3 text-slate-300 hover:text-slate-100 transition-colors duration-200 font-medium flex items-center gap-2 border border-slate-600/50 rounded-lg hover:border-slate-500/50 hover:bg-slate-800/30"
-            whileTap={{ scale: 0.95 }}
-          >
-            How to use PulseGuard?
-            <ArrowRight className="h-4 w-4" />
-          </motion.button>
-        </motion.div>
-      </div>
+          : type === "metric"
+            ? { name: "http.server.duration", value: 312, unit: "ms" }
+            : {
+                trace: "8bbf9e2d",
+                spans: ["POST /checkout", "AuthorizePayment", "CreateOrder"],
+              };
+    setFeed((current) => [
+      ...current,
+      {
+        id: crypto.randomUUID(),
+        type,
+        timestamp: new Date().toLocaleTimeString(),
+        payload: JSON.stringify(payload, null, 2),
+      },
+    ]);
+  };
 
-      {/* Dashboard Preview */}
-      <motion.div
-        className="mt-10 relative"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-      >
-        <div className="rounded-2xl overflow-hidden p-3 bg-slate-800/50 backdrop-blur-sm border border-slate-600/50 shadow-2xl">
-          <Image
-            src={ErrorPage}
-            alt="error page"
-            className="border border-slate-700/70 rounded-lg"
-          />
-        </div>
-      </motion.div>
-    </section>
-  );
-};
-
-// Less friction section
-const LessFriction = () => {
   return (
-    <section className="py-10">
-      <motion.div
-        className="text-center space-y-5 mb-16"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <h2 className="text-3xl md:text-4xl font-bold leading-tight text-slate-100">
-          Less friction. More creation.
-        </h2>
-        <p className="text-md text-slate-300 max-w-4xl mx-auto leading-relaxed">
-          The average development team uses 5+ tools to inefficiently manage
-          application monitoring. PulseGuard provides one place to monitor,
-          debug, and optimize application performance, with built-in support for
-          error tracking, performance monitoring, distributed tracing, session
-          management, log aggregation, and intelligent alerting.
-        </p>
-      </motion.div>
+    <div className="pg-page min-h-screen overflow-hidden">
+      <header className="border-b border-[#e4e4df] bg-[#f7f7f5]/90 backdrop-blur-md">
+        <div className="pg-shell flex h-[78px] items-center justify-between px-5 sm:px-10">
+          <div className="scale-[.84] origin-left">
+            <PulseGuardLogo />
+          </div>
+          <nav className="hidden gap-8 text-xs font-light text-[#454540] md:flex">
+            <button onClick={() => scrollToSection("product")}>Product</button>
+            <button onClick={() => scrollToSection("integrate")}>Docs</button>
+            <button onClick={() => scrollToSection("signals")}>Signals</button>
+          </nav>
+          <div className="flex items-center gap-3">
+            {mounted && (
+              <button
+                className="grid size-9 place-items-center rounded-lg border border-[#dfdfda]"
+                aria-label="Toggle theme"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+            )}
+            <button
+              className="rounded-lg bg-[#171716] px-4 py-2.5 text-[11px] font-medium text-white hover:bg-[#ff5a1f]"
+              onClick={() => authenticate("login")}
+            >
+              Log in
+            </button>
+          </div>
+        </div>
+      </header>
 
-      {/* Feature Grid */}
-      <div className="grid md:grid-cols-3 gap-5">
-        {[
-          {
-            title: "Monitor",
-            description:
-              "Track application health and performance metrics in real-time with comprehensive dashboards.",
-            image: OverviewPage,
-          },
-          {
-            title: "Debug",
-            description:
-              "Identify and resolve issues quickly with detailed error tracking and stack traces.",
-            image: ErrorDetailPage,
-          },
-          {
-            title: "Optimize",
-            description:
-              "Improve application performance with actionable insights and recommendations.",
-            image: TracePage,
-          },
-          {
-            title: "Error Tracking",
-            description:
-              "Comprehensive error monitoring with real-time notifications and detailed context.",
-            image: ErrorPage,
-          },
-          {
-            title: "Performance Analytics",
-            description:
-              "Deep insights into application performance with metrics and trend analysis.",
-            image: LogDetailsPage,
-          },
-          {
-            title: "User Session Monitoring",
-            description:
-              "Track user interactions and behavior patterns across your application.",
-            image: TraceDetailsPage,
-          },
-        ].map((feature, index) => (
-          <motion.div
-            key={feature.title}
-            className="space-y-4 group"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            viewport={{ once: true }}
-          >
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-3 border border-slate-600/50 group-hover:border-blue-500/50 transition-all duration-300">
+      <main className="pg-grid">
+        <section className="pg-shell relative isolate flex lg:min-h-[800px] h-fit items-center justify-center overflow-hidden border-b border-[#e4e4df] px-5 pb-12 pt-20 sm:pb-24 sm:pt-28 text-center">
+          <SoftSignal />
+          <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center">
+            <h1 className="max-w-4xl text-[clamp(2.8rem,5vw,5.5rem)] font-medium leading-[.96] tracking-[-.07em]">
+              Know what changed{" "}
+              <span className="pg-signal">before your users do.</span>
+            </h1>
+            <p className="mt-7 max-w-xl text-sm font-light leading-6 text-[#73736e] sm:text-base">
+              Real-time observability for modern systems. Detect issues, own
+              incidents, and ship with confidence.
+            </p>
+            <div className="mt-8 flex items-center gap-5">
+              <button
+                className="pg-action pg-action-primary"
+                onClick={() => authenticate("signup")}
+              >
+                Start monitoring
+              </button>
+              <button
+                className="flex items-center gap-2 text-xs font-light"
+                onClick={() => scrollToSection("integrate")}
+              >
+                Explore the docs <ArrowRight size={14} />
+              </button>
+            </div>
+            <div className="mt-10 sm:mt-16 lg:mt-20 w-full max-w-6xl overflow-hidden rounded-2xl border border-[#e1e1dc] bg-white shadow-[0_22px_50px_rgba(30,30,20,.07)]">
               <Image
-                src={feature.image}
-                alt={feature.title}
-                width={300}
-                height={300}
-                className="w-full h-auto border border-slate-700/70 rounded-md"
+                src="/overview.png"
+                alt="PulseGuard incident overview"
+                className="block w-full"
+                width={1200}
+                height={630}
+                loading="eager"
               />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold text-slate-100">
-                {feature.title}
-              </h3>
-              <p className="text-slate-300 leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  );
-};
+          </div>
+        </section>
 
-// Interactive Features Section with Hover Details
-const InteractiveFeatures = () => {
-  const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
-
-  const features: Features[] = [
-    {
-      icon: Eye,
-      image: ErrorPage,
-      title: "Error Tracking",
-      description:
-        "Instantly detect and diagnose errors with detailed stack traces, user context, and real-time notifications.",
-      details: [
-        "Real-time error detection and alerting",
-        "Detailed stack traces with source code",
-        "User context and session information",
-        "Error grouping and trend analysis",
-        "Integration with popular development tools",
-      ],
-    },
-    {
-      icon: Activity,
-      image: PerformancePage,
-      title: "Performance Monitoring",
-      description:
-        "Track application performance metrics, response times, and throughput with comprehensive dashboards.",
-      details: [
-        "Response time monitoring and alerts",
-        "Database query performance tracking",
-        "API endpoint analytics",
-        "Resource utilization monitoring",
-        "Performance trend analysis",
-      ],
-    },
-    {
-      icon: GitBranch,
-      image: DistributedPage,
-      title: "Distributed Tracing",
-      description:
-        "Follow requests across your distributed system to identify bottlenecks and optimize performance.",
-      details: [
-        "End-to-end request tracing",
-        "Service dependency mapping",
-        "Performance bottleneck identification",
-        "Cross-service error correlation",
-        "Trace sampling and retention",
-      ],
-    },
-    {
-      icon: Users,
-      image: OverviewPage,
-      title: "User Session Monitoring",
-      description:
-        "Monitor user interactions, session duration, and behavior patterns to improve user experience.",
-      details: [
-        "Real-time user session tracking",
-        "User journey and flow analysis",
-        "Session replay and debugging",
-        "User behavior insights",
-        "Conversion funnel monitoring",
-      ],
-    },
-    {
-      icon: Database,
-      image: LogPage,
-      title: "Log Management",
-      description:
-        "Centralize and search through application logs with powerful filtering and real-time streaming.",
-      details: [
-        "Centralized log aggregation",
-        "Advanced search and filtering",
-        "Real-time log streaming",
-        "Log-based alerting",
-        "Integration with popular logging frameworks",
-      ],
-    },
-    {
-      icon: Bell,
-      image: AlertsPage,
-      title: "Smart Alerts",
-      description:
-        "Get notified about critical issues through your preferred channels with intelligent alert routing.",
-      details: [
-        "Intelligent alert routing and escalation",
-        "Multi-channel notifications",
-        "Alert correlation and deduplication",
-        "Custom alert conditions",
-        "Integration with communication tools",
-      ],
-    },
-  ];
-
-  return (
-    <section id="features" className="py-20">
-      <motion.div
-        className="text-center space-y-6 mb-16"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <h2 className="text-3xl md:text-4xl font-bold leading-tight text-slate-100">
-          Everything You Need to Monitor
-          <br />
-          <span className="text-slate-400">Modern Applications</span>
-        </h2>
-        <p className="text-md text-slate-300 max-w-2xl mx-auto leading-relaxed">
-          From error tracking to performance monitoring, get complete visibility
-          into your application's health and user experience.
-        </p>
-      </motion.div>
-
-      <div className="space-y-8 relative">
-        {/* Vertical line in center */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-blue-500/30 transform -translate-x-1/2" />
-
-        {features.map((feature, index) => {
-          const isLeft = index % 2 === 0;
-          return (
-            <motion.div
-              key={feature.title}
-              className={`flex ${
-                isLeft ? "justify-start" : "justify-end"
-              } relative`}
-              initial={{ opacity: 0, x: isLeft ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <div
-                className={`w-[48.5%] rounded-2xl p-3 bg-slate-800/50 backdrop-blur-sm border border-slate-600/50 shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/50 transition-all duration-300 cursor-pointer relative ${
-                  isLeft ? "mr-auto" : "ml-auto"
-                }`}
-                onMouseEnter={() => setHoveredFeature(index)}
-                onMouseLeave={() => setHoveredFeature(null)}
-              >
-                <Image
-                  src={feature.image}
-                  alt={feature.title}
-                  className="rounded-md border border-slate-700/70"
-                />
-                <div className="flex items-center gap-4 my-3">
-                  <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                    <feature.icon className="h-5 w-5 text-blue-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-slate-100">
-                    {feature.title}
-                  </h3>
-                </div>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-
-                {/* Feature Detail Sidebar - positioned relative to this feature */}
-                {hoveredFeature === index && (
-                  <FeatureDetailSidebar feature={feature} isLeft={isLeft} />
-                )}
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    </section>
-  );
-};
-
-// CTA Section
-const CTA = () => (
-  <section className="py-20 px-6">
-    <div className="max-w-4xl mx-auto text-center space-y-8">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <Badge className="gap-2 px-3 py-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/40">
-          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-          What're you waiting for?
-        </Badge>
-
-        <h2 className="text-3xl md:text-4xl font-bold leading-tight my-4 text-slate-100">
-          Start monitoring your application
-          <br />
-          errors easily
-        </h2>
-
-        <p className="text-md text-slate-300 max-w-2xl mx-auto leading-relaxed mb-8">
-          Observe application metrics and performance. Debug and trace errors.
-          Get more insights. All in a clean, comprehensive, and easy-to-use
-          platform.
-        </p>
-
-        <motion.button
-          className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-lg font-medium shadow-lg shadow-blue-500/20 transition-all duration-200"
-          whileTap={{ scale: 0.95 }}
+        <section
+          id="integrate"
+          className="pg-shell overflow-hidden border-b border-[#e4e4df] px-5 py-10 sm:py-20 lg:py-28"
         >
-          Start Monitoring for Free
-        </motion.button>
-      </motion.div>
-    </div>
-  </section>
-);
+          <div className="w-full">
+            <div className="mb-14 flex justify-center">
+              <div className="inline-flex rounded-lg border border-[#dfdfda] bg-white/70 p-1 dark:border-[#3b3b3b] dark:bg-[#121212]">
+                {(
+                  [
+                    ["instrument", "Request context"],
+                    ["telemetry", "Unified telemetry"],
+                  ] as const
+                ).map(([view, label]) => (
+                  <button
+                    key={view}
+                    onClick={() => selectIntegrationView(view)}
+                    className="relative rounded-md px-4 py-2 text-[11px] font-medium text-[#777772] dark:text-neutral-400"
+                  >
+                    {integrationView === view && (
+                      <motion.span
+                        layoutId="integration-tab"
+                        className="absolute inset-0 rounded-md bg-[#ff5a1f]"
+                        transition={{
+                          type: "spring",
+                          stiffness: 420,
+                          damping: 34,
+                        }}
+                      />
+                    )}
+                    <span
+                      className={
+                        integrationView === view
+                          ? "relative z-10 text-[#171716]"
+                          : "relative z-10"
+                      }
+                    >
+                      {label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mx-auto max-w-6xl overflow-hidden">
+              <motion.div
+                className="flex w-[200%]"
+                animate={{
+                  x: integrationView === "instrument" ? "0%" : "-50%",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 155,
+                  damping: 25,
+                  mass: 0.85,
+                }}
+              >
+                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 px-4 sm:px-6 lg:px-8">
+                  <div className="w-full grid items-start gap-8 lg:gap-16 xl:gap-20 lg:grid-cols-2">
+                    <div>
+                      <p className="pg-label">Instrument once</p>
+                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.95] tracking-[-.065em]">
+                        Follow the request everywhere it goes.
+                      </h2>
+                      <p className="mt-7 max-w-md leading-7 text-[#73736e]">
+                        Start with a few lines. PulseGuard handles the context
+                        that makes every event useful.
+                      </p>
+                    </div>
+                    <div className="overflow-hidden rounded-xl border shadow-[0_24px_65px_rgba(20,20,10,.06)] border-[#3b3b3b] bg-[#121212]">
+                      <div className="flex min-h-[72px] items-center border-b border-[#3b3b3b]">
+                        <div className="flex h-full flex-1 items-center overflow-x-auto px-3">
+                          {(["react", "node", "go"] as Tab[]).map((item) => (
+                            <button
+                              key={item}
+                              className={clsx(
+                                tab === item
+                                  ? "font-medium text-[#f5f5f5]"
+                                  : "text-neutral-400 hover:text-neutral-200",
+                                "relative flex shrink-0 items-center gap-2 px-5 py-3 text-xs rounded-full transition-colors duration-200",
+                              )}
+                              onClick={() => setTab(item)}
+                            >
+                              {tab === item && (
+                                <motion.div
+                                  layoutId="active-tab-pill"
+                                  className="absolute inset-0 rounded-full border border-[#303030] bg-[#1c1c1c] shadow-[0_5px_14px_rgba(30,30,20,.08)]"
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 30,
+                                  }}
+                                />
+                              )}
+                              <span
+                                className={clsx(
+                                  "relative z-10 grid size-4 place-items-center rounded-full text-[8px] transition-colors duration-200",
+                                  tab === item
+                                    ? "bg-[#ff5a1f] text-[#171716]"
+                                    : "border border-current",
+                                )}
+                              >
+                                {item === "react"
+                                  ? "R"
+                                  : item === "node"
+                                    ? "N"
+                                    : "G"}
+                              </span>
+                              <span className="relative z-10">
+                                {item === "react"
+                                  ? "React / Next.js"
+                                  : item === "node"
+                                    ? "Node.js"
+                                    : "Go"}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                        <button
+                          className="mr-4 flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-xs border-[#3b3b3b] bg-[#121212] text-neutral-300"
+                          onClick={copy}
+                        >
+                          {copied ? (
+                            <Check size={14} />
+                          ) : (
+                            <Clipboard size={14} />
+                          )}
+                          {copied ? "Copied" : "Copy"}
+                        </button>
+                      </div>
+                      <pre className="min-h-[280px] overflow-x-auto p-7 font-mono text-xs leading-7 text-neutral-300 sm:p-10">
+                        {samples[tab]}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
 
-// Main Homepage Component
-export default function Homepage() {
-  return (
-    <section className="max-w-7xl border-x border-slate-600/50 m-auto px-5 relative text-white">
-      <Hero />
-      <LessFriction />
-      <InteractiveFeatures />
-      <CTA />
-    </section>
+                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 px-4 sm:px-6 lg:px-8">
+                  <div className="w-full grid items-start gap-8 lg:gap-16 xl:gap-20 lg:grid-cols-2">
+                    <div>
+                      <p className="pg-label">Pipeline in motion</p>
+                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.95] tracking-[-.065em]">
+                        Unified telemetry for modern cloud infrastructure.
+                      </h2>
+                      <p className="mt-7 max-w-md leading-7 text-[#73736e]">
+                        Generate logs, traces, and metrics in one flow. The
+                        collector batches each signal and routes it to the tools
+                        your team already understands.
+                      </p>
+                    </div>
+                    <PipelineSandbox />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="product"
+          className="pg-shell relative isolate flex xl:min-h-[850px] h-fit items-center justify-center overflow-hidden border-b border-[#e4e4df] px-5 py-10 sm:py-20 lg:py-28 text-center"
+        >
+          <SoftSignal />
+          <div className="relative z-10 w-full">
+            <h2 className="text-[clamp(2.5rem,4.4vw,4.7rem)] font-medium tracking-[-.06em]">
+              Everything starts with signals.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-sm font-light text-[#73736e]">
+              Five focused ways to see what your software is doing.
+            </p>
+            <div className="mx-auto mt-10 sm:mt-16 lg:mt-20 max-w-5xl overflow-hidden rounded-2xl border border-[#e1e1dc] bg-white text-left shadow-[0_28px_70px_rgba(30,30,20,.06)]">
+              <Image
+                src={`/${dashboardScreens[activeScreen]}.png`}
+                alt={`${dashboardScreens[activeScreen]} dashboard preview`}
+                className="block w-full transition-opacity duration-500"
+                width={1200}
+                height={630}
+              />
+            </div>
+            <div className="mt-7 flex justify-center gap-2">
+              {dashboardScreens.map((screen, index) => (
+                <button
+                  key={screen}
+                  onClick={() => setActiveScreen(index)}
+                  aria-label={`Show ${screen} dashboard`}
+                  className={
+                    activeScreen === index
+                      ? "h-2 w-6 rounded-full bg-[#ff5a1f] transition-all"
+                      : "size-2 rounded-full bg-[#c6c6c1] transition-all"
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="signals"
+          className="pg-shell overflow-hidden border-b border-[#e4e4df] bg-transparent dark:bg-[#090909]"
+          style={{
+            backgroundColor: theme === "dark" ? "#090909" : "transparent",
+          }}
+        >
+          <div className="px-5 py-10 sm:py-16 lg:py-20">
+            <div className="mx-auto mb-14 flex max-w-6xl justify-center">
+              <div className="inline-flex rounded-lg border border-[#dfdfda] bg-white/70 p-1 dark:border-[#3b3b3b] dark:bg-[#121212]">
+                {(
+                  [
+                    ["arrivals", "See what arrives"],
+                    ["architecture", "Follow every signal"],
+                  ] as const
+                ).map(([view, label]) => (
+                  <button
+                    key={view}
+                    onClick={() => selectSignalView(view)}
+                    className="relative rounded-md px-4 py-2 text-[11px] font-medium text-[#777772] dark:text-neutral-400"
+                  >
+                    {signalView === view && (
+                      <motion.span
+                        layoutId="signal-tab"
+                        className="absolute inset-0 rounded-md bg-[#ff5a1f]"
+                        transition={{
+                          type: "spring",
+                          stiffness: 420,
+                          damping: 34,
+                        }}
+                      />
+                    )}
+                    <span
+                      className={
+                        signalView === view
+                          ? "relative z-10 text-[#171716]"
+                          : "relative z-10"
+                      }
+                    >
+                      {label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mx-auto max-w-6xl overflow-hidden">
+              <motion.div
+                className="flex w-[200%]"
+                animate={{ x: signalView === "arrivals" ? "0%" : "-50%" }}
+                transition={{
+                  type: "spring",
+                  stiffness: 155,
+                  damping: 25,
+                  mass: 0.85,
+                }}
+              >
+                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0">
+                  <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
+                    <div className="text-center">
+                      <p className="pg-label">Test the signal</p>
+                      <h2 className="mt-4 text-[clamp(2.7rem,5vw,5.5rem)] font-semibold tracking-[-.065em] leading-[.95]">
+                        See what arrives.
+                      </h2>
+                      <p className="mx-auto mt-4 max-w-lg text-[#73736e]">
+                        Generate a signal and inspect the context PulseGuard
+                        keeps with it.
+                      </p>
+                    </div>
+                    <div className="mt-7 flex flex-wrap justify-center gap-x-7 gap-y-3">
+                      {(["error", "log", "metric", "trace"] as EventType[]).map(
+                        (type) => (
+                          <button
+                            key={type}
+                            onClick={() => dispatch(type)}
+                            className="flex items-center gap-2 text-sm font-medium hover:text-[#ff5a1f]"
+                          >
+                            Dispatch {type} <ChevronRight size={14} />
+                          </button>
+                        ),
+                      )}
+                      <button
+                        disabled={!feed.length}
+                        onClick={() => setFeed([])}
+                        className="flex items-center gap-2 text-sm text-[#777772] disabled:opacity-35"
+                      >
+                        <Trash2 size={14} />
+                        Clear
+                      </button>
+                    </div>
+                    <div
+                      ref={feedRef}
+                      className="mt-10 h-[280px] overflow-y-auto rounded-xl border border-[#dfdfda] bg-transparent p-6 font-mono text-[11px] text-[#4b4b47] dark:border-[#262626] dark:bg-[#101010] dark:text-neutral-300"
+                      style={{
+                        backgroundColor:
+                          theme === "dark" ? "#101010" : "#ffffff",
+                        borderColor: theme === "dark" ? "#262626" : "#dfdfda",
+                      }}
+                    >
+                      {feed.length === 0 ? (
+                        <div className="grid h-full place-items-center text-center text-[#777772] dark:text-neutral-500">
+                          <div>
+                            <Terminal className="mx-auto mb-3" size={23} />
+                            Dispatch a signal to inspect the payload.
+                          </div>
+                        </div>
+                      ) : (
+                        <AnimatePresence initial={false}>
+                          {feed.map((item) => (
+                            <motion.div
+                              key={item.id}
+                              initial={{ opacity: 0, y: 7 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="border-b border-[#e8e8e3] py-4 last:border-0 dark:border-neutral-800"
+                            >
+                              <div className="mb-2 flex justify-between">
+                                <span className="text-[#ff5a1f]">
+                                  {item.type.toUpperCase()}
+                                </span>
+                                <span className="text-[#8a8a85] dark:text-neutral-600">
+                                  {item.timestamp}
+                                </span>
+                              </div>
+                              <pre className="text-[#777772] dark:text-neutral-500">
+                                {item.payload}
+                              </pre>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0">
+                  <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+                    <ArchitectureGraph />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="pg-shell flex xl:min-h-[600px] h-fit items-center justify-center border-b border-[#e4e4df] px-5 py-10 sm:py-20 lg:py-28 text-center">
+          <div>
+            <h2 className="max-w-4xl text-[clamp(3rem,6vw,6.4rem)] font-semibold leading-[.93] tracking-[-.075em]">
+              The next incident should not be a mystery.
+            </h2>
+            <button
+              className="pg-action pg-action-primary mt-10"
+              onClick={() => authenticate("signup")}
+            >
+              Create your project <ArrowRight size={16} />
+            </button>
+          </div>
+        </section>
+
+        <LandingFaq />
+      </main>
+
+      <footer className="flex min-h-screen flex-col overflow-hidden bg-black text-white">
+        <div className="relative h-[48vh] min-h-[300px] w-full overflow-hidden bg-black">
+          <Image
+            src="/swan.jpg"
+            alt="Swan on dark water"
+            className="h-full w-full object-cover object-center"
+            fill
+            priority
+            loading="eager"
+          />
+        </div>
+        <div
+          aria-hidden="true"
+          className="relative select-none whitespace-nowrap px-3 text-center text-[17vw] font-semibold leading-none tracking-[-.1em] text-white/[0.07]"
+        >
+          PULSEGUARD
+          <div className="absolute inset-[3px] sm:inset-2 right-[4px] sm:right-3 top-[4px] sm:top-3 select-none whitespace-nowrap px-3 text-center text-[17vw] font-semibold leading-none tracking-[-.1em] text-white/20">
+            PULSEGUARD
+          </div>
+        </div>
+
+        <div className="mt-5 px-6 pb-10 sm:px-12">
+          <div className="grid gap-10 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <div className="scale-[.84] origin-left invert dark:invert-0">
+                <PulseGuardLogo />
+              </div>
+              <p className="mt-5 max-w-sm text-[11px] leading-relaxed text-neutral-400">
+                Open-source, developer-first observability pipeline for modern
+                distributed web assets. Standardized on OpenTelemetry, Loki,
+                Tempo, and Prometheus.
+              </p>
+              <div className="mt-5 flex gap-3">
+                <a
+                  href="mailto:chimezieinnocent39@gmail.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="grid size-9 place-items-center rounded-lg border border-[#303030] bg-[#151515] text-neutral-400 hover:text-white"
+                >
+                  <HugeiconsIcon
+                    icon={Mail01Icon}
+                    size={16}
+                    strokeWidth={1.5}
+                  />
+                </a>
+                <a
+                  href="https://github.com/Vic-Orlands/pulseguard-app"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="grid size-9 place-items-center rounded-lg border border-[#303030] bg-[#151515] text-neutral-400 hover:text-white"
+                >
+                  <HugeiconsIcon
+                    icon={GithubIcon}
+                    size={16}
+                    strokeWidth={1.5}
+                  />
+                </a>
+                <a
+                  href="https://x.com/MezieIV"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="grid size-9 place-items-center rounded-lg border border-[#303030] bg-[#151515] text-neutral-400 hover:text-white"
+                >
+                  <HugeiconsIcon
+                    icon={NewTwitterIcon}
+                    size={16}
+                    strokeWidth={1.5}
+                  />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/victor-innocent/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="grid size-9 place-items-center rounded-lg border border-[#303030] bg-[#151515] text-neutral-400 hover:text-white"
+                >
+                  <HugeiconsIcon
+                    icon={Linkedin02Icon}
+                    size={16}
+                    strokeWidth={1.5}
+                  />
+                </a>
+              </div>
+            </div>
+            <div className="md:col-span-1 md:ml-auto">
+              <p className="font-mono text-[9px] uppercase tracking-wider text-neutral-500">
+                Platform sections
+              </p>
+              <div className="mt-4 space-y-3 text-[11px] text-neutral-400">
+                <button
+                  onClick={() => {
+                    scrollToSection("signals");
+                    setSignalView("architecture");
+                  }}
+                  className="block text-left hover:text-white"
+                >
+                  Topology architecture
+                </button>
+                <button
+                  onClick={() => scrollToSection("signals")}
+                  className="block text-left hover:text-white"
+                >
+                  Metrics, logs & traces sandbox
+                </button>
+                <button
+                  onClick={() => scrollToSection("integrate")}
+                  className="block text-left hover:text-white"
+                >
+                  Configuration explorer
+                </button>
+                <button
+                  onClick={() => scrollToSection("faq")}
+                  className="block text-left hover:text-white"
+                >
+                  Frequently asked questions
+                </button>
+                <p className="mt-4 text-[10px] leading-relaxed text-neutral-500 w-sm">
+                  OpenTelemetry is a registered trademark of The Linux
+                  Foundation. Backends and templates are released under Apache
+                  2.0 licenses.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 flex flex-col justify-between gap-4 border-t border-[#303030] pt-6 text-xs text-neutral-500 sm:flex-row">
+            <span>
+              © {new Date().getFullYear()} PulseGuard. All rights reserved.
+            </span>
+            <div className="flex gap-3">
+              <span>Privacy policy</span>
+              <span>•</span>
+              <span>Terms of service</span>
+              <span>•</span>
+              <span className="font-mono text-[10px]">
+                Built for Developers
+              </span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }

@@ -387,7 +387,7 @@ export default function Homepage() {
                   <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
                     <div>
                       <p className="pg-label">Pipeline in motion</p>
-                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.9] tracking-[-.065em]">
+                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.9] tracking-[-.065em] lg:w-[90%] 2xl:w-[full]">
                         Unified telemetry for modern cloud infrastructure.
                       </h2>
                       <p className="mt-7 max-w-md leading-7 text-[#73736e]">
@@ -500,7 +500,7 @@ export default function Homepage() {
                     "shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
                     signalView === "arrivals"
                       ? "max-h-[1400px] opacity-100"
-                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100",
                   )}
                 >
                   <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -579,7 +579,7 @@ export default function Homepage() {
                     "shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
                     signalView === "architecture"
                       ? "max-h-[1400px] opacity-100"
-                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100",
                   )}
                 >
                   <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -622,10 +622,10 @@ export default function Homepage() {
         </div>
         <div
           aria-hidden="true"
-          className="relative select-none whitespace-nowrap px-3 text-center text-[17vw] font-semibold leading-none tracking-[-.1em] text-white/[0.07]"
+          className="relative select-none whitespace-nowrap text-center text-[17vw] font-semibold leading-none tracking-[-.1em] text-white/[0.07]"
         >
           PULSEGUARD
-          <div className="absolute inset-[3px] sm:inset-2 right-[4px] sm:right-3 top-[4px] sm:top-3 select-none whitespace-nowrap px-3 text-center text-[17vw] font-semibold leading-none tracking-[-.1em] text-white/20">
+          <div className="absolute inset-[3px] sm:inset-2 right-[4px] sm:right-3 top-[4px] sm:top-3 select-none whitespace-nowrap text-center text-[17vw] font-semibold leading-none tracking-[-.1em] text-white/20">
             PULSEGUARD
           </div>
         </div>

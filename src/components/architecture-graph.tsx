@@ -13,7 +13,7 @@ import { Network, LayoutGrid } from "lucide-react";
 
 const nodes = {
   app: {
-    name: "Next.js Application",
+    name: "Application",
     sub: "Telemetry generation",
     icon: CpuIcon,
     details: [
@@ -33,7 +33,7 @@ const nodes = {
     ],
   },
   loki: {
-    name: "Grafana Loki",
+    name: "Loki",
     sub: "Structured log storage",
     icon: DatabaseIcon,
     details: [
@@ -43,7 +43,7 @@ const nodes = {
     ],
   },
   tempo: {
-    name: "Grafana Tempo",
+    name: "Tempo",
     sub: "Trace waterfalls",
     icon: Layers01Icon,
     details: [
@@ -63,13 +63,14 @@ const nodes = {
     ],
   },
   grafana: {
-    name: "Grafana Dashboards",
+    name: "Dashboards",
     sub: "Unified visualization",
     icon: LayoutGrid,
     details: [
       "Brings logs, traces, and metrics into one workspace",
       "Makes cross-signal investigation immediate",
       "Supports team access and shared operational context",
+      "You can use Grafana to build and curate your own dashboard too",
     ],
   },
 };
@@ -107,7 +108,7 @@ function NodeButton({
           size={16}
         />
       )}
-      <span className="block text-xs font-medium text-[#272725] dark:text-[#f5f5f5]">
+      <span className="block text-xs font-medium text-[#272725] dark:text-[#f5f5f5] truncate">
         {node.name}
       </span>
       <span className="mt-1 block font-mono text-[9px] uppercase tracking-wider text-[#777772] dark:text-[#a3a3a3]">
@@ -182,7 +183,7 @@ export function ArchitectureGraph() {
           </div>
         </div>
 
-        <div className="w-full rounded-lg border border-[#dfdfda] p-6 dark:border-[#3b3b3b] sm:p-8 dark:bg-[#121212]">
+        <div className="w-full rounded-lg border border-[#dfdfda] p-6 dark:border-[#3b3b3b] sm:p-8 dark:bg-[#121212] hidden lg:block">
           <div className="flex items-start justify-between border-b border-[#dfdfda] pb-5 dark:border-[#3b3b3b]">
             <div>
               <p className="pg-label">Selected node</p>
@@ -193,7 +194,7 @@ export function ArchitectureGraph() {
             <span className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b]">
               {activeNode.name === "OpenTelemetry Collector" ? (
                 <Network size={18} />
-              ) : activeNode.name === "Grafana Dashboards" ? (
+              ) : activeNode.name === "Dashboards" ? (
                 <LayoutGrid size={18} />
               ) : (
                 <HugeiconsIcon icon={ActiveIcon as any} size={18} />

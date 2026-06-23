@@ -315,7 +315,7 @@ export function PipelineSandbox() {
       </div>
 
       <section className="mt-4 flex flex-col sm:flex-row justify-between items-center">
-        <h4 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wide">
+        <h4 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wide mb-2 lg:mb-0">
           Simulate events:
         </h4>
         <div className="flex flex-wrap items-center gap-2">
@@ -323,21 +323,29 @@ export function PipelineSandbox() {
             onClick={handleSimulateSuccess}
             className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-blue-400/20 border-[#3b3b3b] text-blue-400 cursor-pointer transition-colors"
           >
-            <Zap size={13} />
+            <Zap size={13} className="hidden lg:block" />
             Success trace
           </button>
           <button
             onClick={handleSimulateError}
             className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#d4d4d4]/20 border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
           >
-            <HugeiconsIcon icon={Shield01Icon} size={13} />
+            <HugeiconsIcon
+              icon={Shield01Icon}
+              size={13}
+              className="hidden lg:block"
+            />
             Exception
           </button>
           <button
             onClick={handleSimulateSpike}
             className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-orange-400/20 border-[#3b3b3b] text-orange-400 cursor-pointer transition-colors"
           >
-            <HugeiconsIcon icon={Refresh01Icon} size={13} />
+            <HugeiconsIcon
+              icon={Refresh01Icon}
+              size={13}
+              className="hidden lg:block"
+            />
             Spike CPU
           </button>
         </div>

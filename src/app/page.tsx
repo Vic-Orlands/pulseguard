@@ -274,7 +274,7 @@ export default function Homepage() {
                 ))}
               </div>
             </div>
-            <div className="mx-auto max-w-6xl overflow-hidden">
+            <div className="mx-auto max-w-8xl overflow-hidden">
               <motion.div
                 className="flex w-[200%]"
                 animate={{
@@ -429,9 +429,6 @@ export default function Homepage() {
         <section
           id="signals"
           className="pg-shell overflow-hidden border-b border-[#e4e4df] bg-transparent dark:bg-[#090909]"
-          style={{
-            backgroundColor: theme === "dark" ? "#090909" : "transparent",
-          }}
         >
           <div className="px-5 py-10 sm:py-16 lg:py-20">
             <div className="mx-auto mb-14 flex max-w-6xl justify-center">
@@ -518,12 +515,7 @@ export default function Homepage() {
                     </div>
                     <div
                       ref={feedRef}
-                      className="mt-10 h-[280px] overflow-y-auto rounded-xl border border-[#dfdfda] bg-transparent p-6 font-mono text-[11px] text-[#4b4b47] dark:border-[#262626] dark:bg-[#101010] dark:text-neutral-300"
-                      style={{
-                        backgroundColor:
-                          theme === "dark" ? "#101010" : "#ffffff",
-                        borderColor: theme === "dark" ? "#262626" : "#dfdfda",
-                      }}
+                      className="mt-10 h-[280px] overflow-y-auto rounded-xl border border-[#dfdfda] bg-white p-6 font-mono text-[11px] text-[#4b4b47] dark:border-[#262626] dark:bg-[#101010] dark:text-neutral-300"
                     >
                       {feed.length === 0 ? (
                         <div className="grid h-full place-items-center text-center text-[#777772] dark:text-neutral-500">

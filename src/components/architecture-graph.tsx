@@ -6,12 +6,10 @@ import {
   CpuIcon,
   DatabaseIcon,
   Layers01Icon,
-  LayoutGridIcon,
   RadioIcon,
 } from "@hugeicons/core-free-icons";
 import { useState } from "react";
-import { useTheme } from "next-themes";
-import { Network } from "lucide-react";
+import { Network, LayoutGrid } from "lucide-react";
 
 const nodes = {
   app: {
@@ -67,7 +65,7 @@ const nodes = {
   grafana: {
     name: "Grafana Dashboards",
     sub: "Unified visualization",
-    icon: LayoutGridIcon,
+    icon: LayoutGrid,
     details: [
       "Brings logs, traces, and metrics into one workspace",
       "Makes cross-signal investigation immediate",
@@ -87,8 +85,6 @@ function NodeButton({
   active: boolean;
   onClick: () => void;
 }) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const node = nodes[nodeKey];
   const Icon = node.icon;
   return (
@@ -99,17 +95,11 @@ function NodeButton({
           ? "rounded-lg border border-[#ff5a1f] bg-[#ff5a1f]/10 px-4 py-3 text-center"
           : "rounded-lg border border-[#dfdfda] bg-transparent px-4 py-3 text-center hover:border-[#9a9a95] dark:border-[#3b3b3b] dark:bg-[#121212] dark:hover:border-[#5a5a5a]"
       }
-      style={{
-        backgroundColor: active
-          ? undefined
-          : isDark
-            ? "#121212"
-            : "transparent",
-        borderColor: active ? "#ff5a1f" : isDark ? "#3b3b3b" : "#dfdfda",
-      }}
     >
       {nodeKey === "otel" ? (
         <Network className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
+      ) : nodeKey === "grafana" ? (
+        <LayoutGrid className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
       ) : (
         <HugeiconsIcon
           icon={Icon as any}
@@ -117,10 +107,7 @@ function NodeButton({
           size={16}
         />
       )}
-      <span
-        className="block text-xs font-medium text-[#272725] dark:text-white"
-        style={{ color: isDark ? "#f5f5f5" : "#272725" }}
-      >
+      <span className="block text-xs font-medium text-[#272725] dark:text-white">
         {node.name}
       </span>
       <span className="mt-1 block font-mono text-[9px] uppercase tracking-wider text-[#777772] dark:text-[#a3a3a3]">
@@ -132,19 +119,13 @@ function NodeButton({
 
 export function ArchitectureGraph() {
   const [activeKey, setActiveKey] = useState<NodeKey>("otel");
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const activeNode = nodes[activeKey];
   const ActiveIcon = activeNode.icon;
 
-  const borderColor = isDark ? "#3b3b3b" : "#dfdfda";
   return (
     <section>
       <p className="pg-label">Pipeline architecture</p>
-      <h2
-        className="mt-4 w-full text-3xl font-semibold tracking-[-.065em] leading-[.95] lg:text-[5.5rem] lg:max-w-4xl"
-        style={{ color: isDark ? "#f5f5f5" : "#272725" }}
-      >
+      <h2 className="mt-4 w-full text-3xl font-semibold tracking-[-.065em] leading-[.95] lg:text-[5.5rem] lg:max-w-4xl text-[#272725] dark:text-[#f5f5f5]">
         Follow every signal through the stack.
       </h2>
       <p className="mt-4 max-w-xl text-sm font-light leading-6 text-[#73736e] dark:text-[#a3a3a3]">
@@ -153,13 +134,7 @@ export function ArchitectureGraph() {
       </p>
 
       <section className="mt-5 grid items-center gap-12 lg:grid-cols-[1.15fr_.85fr]">
-        <div
-          className="rounded-lg border border-[#dfdfda] bg-transparent p-6 dark:border-[#3b3b3b] dark:bg-[#121212]"
-          style={{
-            borderColor,
-            backgroundColor: isDark ? "#121212" : "transparent",
-          }}
-        >
+        <div className="rounded-lg border border-[#dfdfda] bg-transparent p-6 dark:border-[#3b3b3b] dark:bg-[#121212]">
           <div className="flex justify-center">
             <NodeButton
               nodeKey="app"
@@ -179,10 +154,7 @@ export function ArchitectureGraph() {
               onClick={() => setActiveKey("otel")}
             />
           </div>
-          <div
-            className="mx-auto my-5 h-7 w-[72%] border-x border-t border-[#d4d4cf] dark:border-[#3b3b3b]"
-            style={{ borderColor }}
-          />
+          <div className="mx-auto my-5 h-7 w-[72%] border-x border-t border-[#d4d4cf] dark:border-[#3b3b3b]" />
           <div className="grid grid-cols-3 gap-3">
             <NodeButton
               nodeKey="loki"
@@ -200,10 +172,7 @@ export function ArchitectureGraph() {
               onClick={() => setActiveKey("prometheus")}
             />
           </div>
-          <div
-            className="mx-auto my-5 h-7 w-[72%] border-x border-b border-[#d4d4cf] dark:border-[#3b3b3b]"
-            style={{ borderColor }}
-          />
+          <div className="mx-auto my-5 h-7 w-[72%] border-x border-b border-[#d4d4cf] dark:border-[#3b3b3b]" />
           <div className="flex justify-center">
             <NodeButton
               nodeKey="grafana"
@@ -213,32 +182,19 @@ export function ArchitectureGraph() {
           </div>
         </div>
 
-        <div
-          className="w-full rounded-lg border border-[#dfdfda] p-6 dark:border-[#3b3b3b] sm:p-8"
-          style={{
-            borderColor,
-            backgroundColor: isDark ? "#121212" : "transparent",
-          }}
-        >
-          <div
-            className="flex items-start justify-between border-b border-[#e6e6e1] pb-5 dark:border-[#303030]"
-            style={{ borderColor }}
-          >
+        <div className="w-full rounded-lg border border-[#dfdfda] bg-transparent p-6 dark:border-[#3b3b3b] dark:bg-[#121212] sm:p-8">
+          <div className="flex items-start justify-between border-b border-[#e6e6e1] pb-5 dark:border-[#303030]">
             <div>
               <p className="pg-label">Selected node</p>
-              <h4
-                className="mt-2 text-xl font-medium text-[#272725] dark:text-white"
-                style={{ color: isDark ? "#f5f5f5" : "#272725" }}
-              >
+              <h4 className="mt-2 text-xl font-medium text-[#272725] dark:text-white">
                 {activeNode.name}
               </h4>
             </div>
-            <span
-              className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b]"
-              style={{ borderColor }}
-            >
+            <span className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b] bg-transparent dark:bg-[#121212]">
               {activeNode.name === "OpenTelemetry Collector" ? (
                 <Network size={18} />
+              ) : activeNode.name === "Grafana Dashboards" ? (
+                <LayoutGrid size={18} />
               ) : (
                 <HugeiconsIcon icon={ActiveIcon as any} size={18} />
               )}
@@ -255,10 +211,7 @@ export function ArchitectureGraph() {
               </li>
             ))}
           </ul>
-          <div
-            className="mt-8 border-t border-[#e6e6e1] pt-4 font-mono text-[10px] uppercase tracking-wider text-[#777772] dark:border-[#303030] dark:text-[#a3a3a3]"
-            style={{ borderColor }}
-          >
+          <div className="mt-8 border-t border-[#e6e6e1] pt-4 font-mono text-[10px] uppercase tracking-wider text-[#777772] dark:border-[#303030] dark:text-[#a3a3a3]">
             Node id · {activeKey.toUpperCase()}
           </div>
         </div>

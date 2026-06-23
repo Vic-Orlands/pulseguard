@@ -116,11 +116,10 @@ export function PipelineSandbox() {
   };
 
   return (
-    <div className="rounded-2xl border p-4 border-[#3b3b3b] bg-[#121212] sm:p-5">
-      <div className="mb-4 flex items-center justify-between border-b pb-3 font-mono text-[10px] uppercase tracking-wider border-[#303030] text-[#a3a3a3]">
-        <span>PulseGuard pipeline engine</span>
-        <span className="text-[#ff5a1f]">Live diagram</span>
-      </div>
+    <div className="rounded-2xl border p-4 border-[#3b3b3b] bg-[#121212]">
+      <h3 className="mb-4 font-mono text-[10px] uppercase tracking-wider text-[#a3a3a3]">
+        PulseGuard pipeline engine
+      </h3>
       <div className="relative h-[250px] overflow-hidden rounded-xl border border-[#303030] bg-[#0d0d0d]">
         <svg
           className="absolute inset-0 h-full w-full"
@@ -322,21 +321,21 @@ export function PipelineSandbox() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleSimulateSuccess}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-blue-400 cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-blue-400/20 border-[#3b3b3b] text-blue-400 cursor-pointer transition-colors"
           >
             <Zap size={13} />
             Success trace
           </button>
           <button
             onClick={handleSimulateError}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#d4d4d4]/20 border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
           >
             <HugeiconsIcon icon={Shield01Icon} size={13} />
             Exception
           </button>
           <button
             onClick={handleSimulateSpike}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-orange-400 cursor-pointer transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-orange-400/20 border-[#3b3b3b] text-orange-400 cursor-pointer transition-colors"
           >
             <HugeiconsIcon icon={Refresh01Icon} size={13} />
             Spike CPU

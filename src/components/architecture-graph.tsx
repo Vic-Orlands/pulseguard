@@ -107,7 +107,7 @@ function NodeButton({
           size={16}
         />
       )}
-      <span className="block text-xs font-medium text-[#272725] dark:text-white">
+      <span className="block text-xs font-medium text-[#272725] dark:text-[#f5f5f5]">
         {node.name}
       </span>
       <span className="mt-1 block font-mono text-[9px] uppercase tracking-wider text-[#777772] dark:text-[#a3a3a3]">
@@ -125,7 +125,7 @@ export function ArchitectureGraph() {
   return (
     <section>
       <p className="pg-label">Pipeline architecture</p>
-      <h2 className="mt-4 w-full text-3xl font-semibold tracking-[-.065em] leading-[.95] lg:text-[5.5rem] lg:max-w-4xl text-[#272725] dark:text-[#f5f5f5]">
+      <h2 className="mt-4 w-full text-3xl font-semibold tracking-[-.065em] leading-[.95] lg:text-[5.5rem] lg:max-w-4xl dark:text-[#272725]">
         Follow every signal through the stack.
       </h2>
       <p className="mt-4 max-w-xl text-sm font-light leading-6 text-[#73736e] dark:text-[#a3a3a3]">
@@ -154,7 +154,7 @@ export function ArchitectureGraph() {
               onClick={() => setActiveKey("otel")}
             />
           </div>
-          <div className="mx-auto my-5 h-7 w-[72%] border-x border-t border-[#d4d4cf] dark:border-[#3b3b3b]" />
+          <div className="mx-auto my-5 h-7 w-[72%] border-x border-t border-[#dfdfda] dark:border-[#3b3b3b]" />
           <div className="grid grid-cols-3 gap-3">
             <NodeButton
               nodeKey="loki"
@@ -172,7 +172,7 @@ export function ArchitectureGraph() {
               onClick={() => setActiveKey("prometheus")}
             />
           </div>
-          <div className="mx-auto my-5 h-7 w-[72%] border-x border-b border-[#d4d4cf] dark:border-[#3b3b3b]" />
+          <div className="mx-auto my-5 h-7 w-[72%] border-x border-b border-[#dfdfda] dark:border-[#3b3b3b]" />
           <div className="flex justify-center">
             <NodeButton
               nodeKey="grafana"
@@ -182,15 +182,15 @@ export function ArchitectureGraph() {
           </div>
         </div>
 
-        <div className="w-full rounded-lg border border-[#dfdfda] bg-transparent p-6 dark:border-[#3b3b3b] dark:bg-[#121212] sm:p-8">
-          <div className="flex items-start justify-between border-b border-[#e6e6e1] pb-5 dark:border-[#303030]">
+        <div className="w-full rounded-lg border border-[#dfdfda] p-6 dark:border-[#3b3b3b] sm:p-8 dark:bg-[#121212]">
+          <div className="flex items-start justify-between border-b border-[#dfdfda] pb-5 dark:border-[#3b3b3b]">
             <div>
               <p className="pg-label">Selected node</p>
-              <h4 className="mt-2 text-xl font-medium text-[#272725] dark:text-white">
+              <h4 className="mt-2 text-xl font-medium text-[#272725] dark:text-white  dark:text-[#f5f5f5]">
                 {activeNode.name}
               </h4>
             </div>
-            <span className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b] bg-transparent dark:bg-[#121212]">
+            <span className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b]">
               {activeNode.name === "OpenTelemetry Collector" ? (
                 <Network size={18} />
               ) : activeNode.name === "Grafana Dashboards" ? (

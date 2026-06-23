@@ -42,7 +42,9 @@ const samples: Record<Tab, string> = {
   react: `import { TelemetryProvider } from "@pulseguard/react";
 
 export default function RootLayout({ children }) {
-  return <TelemetryProvider projectId="your-project-id">{children}</TelemetryProvider>;
+  return <TelemetryProvider projectId="your-project-id">
+            {children}
+         </TelemetryProvider>;
 }`,
   node: `import { NodeSDK } from "@opentelemetry/sdk-node";
 
@@ -274,7 +276,7 @@ export default function Homepage() {
                 ))}
               </div>
             </div>
-            <div className="mx-auto max-w-7xl overflow-hidden">
+            <div className="mx-auto max-w-6xl overflow-hidden">
               <motion.div
                 className="flex w-[200%]"
                 animate={{
@@ -287,11 +289,11 @@ export default function Homepage() {
                   mass: 0.85,
                 }}
               >
-                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 px-4 sm:px-6 lg:px-8">
-                  <div className="w-full grid items-start gap-8 lg:gap-12 lg:grid-cols-[40%_60%]">
+                <div className="shrink-0 w-1/2 flex items-center h-fit py-4 lg:py-0 px-4 sm:px-6 lg:px-8">
+                  <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
                     <div>
                       <p className="pg-label">Instrument once</p>
-                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.95] tracking-[-.065em]">
+                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.9] tracking-[-.065em]">
                         Follow the request everywhere it goes.
                       </h2>
                       <p className="mt-7 max-w-md leading-7 text-[#73736e]">
@@ -299,7 +301,7 @@ export default function Homepage() {
                         that makes every event useful.
                       </p>
                     </div>
-                    <div className="overflow-hidden rounded-xl border shadow-[0_24px_65px_rgba(20,20,10,.06)] border-[#3b3b3b] bg-[#121212] lg:w-full">
+                    <div className="overflow-hidden rounded-xl border shadow-[0_24px_65px_rgba(20,20,10,.06)] border-[#3b3b3b] bg-[#121212]">
                       <div className="flex min-h-[72px] items-center border-b border-[#3b3b3b]">
                         <div className="flex h-full flex-1 items-center overflow-x-auto px-3">
                           {(["react", "node", "go"] as Tab[]).map((item) => (
@@ -367,11 +369,11 @@ export default function Homepage() {
                   </div>
                 </div>
 
-                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 px-4 sm:px-6 lg:px-8">
-                  <div className="w-full grid items-start gap-8 lg:gap-16 xl:gap-20 lg:grid-cols-2">
+                <div className="shrink-0 w-1/2 flex items-start h-fit">
+                  <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
                     <div>
                       <p className="pg-label">Pipeline in motion</p>
-                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.95] tracking-[-.065em]">
+                      <h2 className="mt-5 text-[clamp(2.8rem,4.5vw,5rem)] font-semibold leading-[.9] tracking-[-.065em]">
                         Unified telemetry for modern cloud infrastructure.
                       </h2>
                       <p className="mt-7 max-w-md leading-7 text-[#73736e]">
@@ -429,9 +431,6 @@ export default function Homepage() {
         <section
           id="signals"
           className="pg-shell overflow-hidden border-b border-[#e4e4df] bg-transparent dark:bg-[#090909]"
-          style={{
-            backgroundColor: theme === "dark" ? "#090909" : "transparent",
-          }}
         >
           <div className="px-5 py-10 sm:py-16 lg:py-20">
             <div className="mx-auto mb-14 flex max-w-6xl justify-center">
@@ -519,11 +518,6 @@ export default function Homepage() {
                     <div
                       ref={feedRef}
                       className="mt-10 h-[280px] overflow-y-auto rounded-xl border border-[#dfdfda] bg-transparent p-6 font-mono text-[11px] text-[#4b4b47] dark:border-[#262626] dark:bg-[#101010] dark:text-neutral-300"
-                      style={{
-                        backgroundColor:
-                          theme === "dark" ? "#101010" : "#ffffff",
-                        borderColor: theme === "dark" ? "#262626" : "#dfdfda",
-                      }}
                     >
                       {feed.length === 0 ? (
                         <div className="grid h-full place-items-center text-center text-[#777772] dark:text-neutral-500">

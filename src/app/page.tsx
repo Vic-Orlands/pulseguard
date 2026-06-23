@@ -239,7 +239,7 @@ export default function Homepage() {
           className="pg-shell overflow-hidden border-b border-[#e4e4df] px-5 py-10 sm:py-20 lg:py-28"
         >
           <div className="w-full">
-            <div className="mb-14 flex justify-center">
+            <div className="mb-8 lg:mb-14 flex justify-center">
               <div className="inline-flex rounded-lg border border-[#dfdfda] bg-white/70 p-1 dark:border-[#3b3b3b] dark:bg-[#121212]">
                 {(
                   [
@@ -289,7 +289,14 @@ export default function Homepage() {
                   mass: 0.85,
                 }}
               >
-                <div className="shrink-0 w-1/2 flex items-center h-fit py-4 lg:py-0 px-4 sm:px-6 lg:px-8">
+                <div
+                  className={clsx(
+                    "shrink-0 w-1/2 flex items-center h-fit lg:px-8 transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
+                    integrationView === "instrument"
+                      ? "max-h-[1200px] opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                  )}
+                >
                   <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
                     <div>
                       <p className="pg-label">Instrument once</p>
@@ -311,7 +318,7 @@ export default function Homepage() {
                                 tab === item
                                   ? "font-medium text-[#f5f5f5]"
                                   : "text-neutral-400 hover:text-neutral-200",
-                                "relative flex shrink-0 items-center gap-2 px-5 py-3 text-xs rounded-full transition-colors duration-200",
+                                "relative flex shrink-0 items-center gap-2 px-3 lg:px-5 py-3 text-xs rounded-full transition-colors duration-200",
                               )}
                               onClick={() => setTab(item)}
                             >
@@ -340,7 +347,7 @@ export default function Homepage() {
                                     ? "N"
                                     : "G"}
                               </span>
-                              <span className="relative z-10">
+                              <span className="relative z-10 lg:block hidden">
                                 {item === "react"
                                   ? "React / Next.js"
                                   : item === "node"
@@ -369,7 +376,14 @@ export default function Homepage() {
                   </div>
                 </div>
 
-                <div className="shrink-0 w-1/2 flex items-start h-fit">
+                <div
+                  className={clsx(
+                    "shrink-0 w-1/2 flex items-start h-fit transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
+                    integrationView === "telemetry"
+                      ? "max-h-[1200px] opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                  )}
+                >
                   <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
                     <div>
                       <p className="pg-label">Pipeline in motion</p>

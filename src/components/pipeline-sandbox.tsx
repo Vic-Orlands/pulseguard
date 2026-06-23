@@ -8,14 +8,16 @@ import {
   Refresh01Icon,
   Shield01Icon,
 } from "@hugeicons/core-free-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Server, Zap } from "lucide-react";
 import { motion } from "motion/react";
 
 type Packet = {
-  id: number;
+  id: string;
   color: string;
   target: "top" | "middle" | "bottom";
+  type: "log" | "trace" | "metric";
+  duration: number;
 };
 
 export function PipelineSandbox() {
@@ -24,50 +26,93 @@ export function PipelineSandbox() {
   const [requests, setRequests] = useState(140);
   const [errors, setErrors] = useState(0);
   const [message, setMessage] = useState(
-    "Pipeline initialized. Waiting for application telemetry.",
+    "Initializing pipeline integration...",
   );
-
-  const emit = (color: string, target: Packet["target"]) => {
-    const id = Date.now() + Math.floor(Math.random() * 999);
-    setPackets((current) => [...current, { id, color, target }]);
-    window.setTimeout(
-      () =>
-        setPackets((current) => current.filter((packet) => packet.id !== id)),
-      1650,
-    );
-  };
+  const packetIdCounter = useRef(0);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      emit("#ff5a1f", "bottom"); // metric (orange)
-      setCpu((current) =>
-        Math.max(18, Math.min(68, current + Math.floor(Math.random() * 5) - 2)),
-      );
-      setRequests((current) => current + (Math.random() > 0.5 ? 1 : -1));
-    }, 4200);
-    return () => window.clearInterval(timer);
+      // Trickle normal metrics
+      triggerPacket("metric");
+      setCpu((prev) => {
+        const drift = Math.floor(Math.random() * 5) - 2;
+        return Math.max(15, Math.min(65, prev + drift));
+      });
+      setRequests((prev) => prev + (Math.random() > 0.6 ? 2 : -1));
+    }, 3800);
+    return () => clearInterval(timer);
   }, []);
 
-  const success = () => {
-    emit("#3b82f6", "middle"); // trace (blue)
-    emit("#a855f7", "top"); // log (purple)
-    setMessage("GET /api/checkout · 45ms · trace status: OK");
+  const triggerPacket = (type: "log" | "trace" | "metric") => {
+    const colors = {
+      log: "#a855f7",
+      trace: "#3b82f6",
+      metric: "#f97316",
+    };
+
+    const targetMap: Record<
+      "log" | "trace" | "metric",
+      "top" | "middle" | "bottom"
+    > = {
+      log: "top",
+      trace: "middle",
+      metric: "bottom",
+    };
+
+    const id = `${type}-${packetIdCounter.current++}`;
+    const newPacket: Packet = {
+      id,
+      type,
+      color: colors[type],
+      target: targetMap[type],
+      duration: type === "trace" ? 1.6 : type === "log" ? 1.8 : 1.4,
+    };
+
+    setPackets((prev) => [...prev, newPacket]);
+
+    // Clear packet after animation is complete
+    setTimeout(() => {
+      setPackets((prev) => prev.filter((p) => p.id !== id));
+
+      if (type === "metric") {
+        setRequests((prev) => prev + 1);
+      } else if (type === "trace") {
+        // Trace hit
+      } else if (type === "log") {
+        // Log hit
+      }
+    }, 2000);
   };
 
-  const exception = () => {
-    emit("#a855f7", "top"); // log (purple)
-    emit("#3b82f6", "middle"); // trace (blue)
-    setErrors((current) => current + 1);
-    setMessage("POST /api/pay · card validation timeout · trace status: ERROR");
+  const handleSimulateSuccess = () => {
+    triggerPacket("trace");
+    triggerPacket("log");
+    triggerPacket("metric");
+    setMessage("GET /api/v1/checkout - Duration 45ms (Span status: OK)");
   };
 
-  const spike = () => {
-    setCpu(92);
-    setMessage("Load test active · container metrics spiked to 92%");
-    [0, 180, 360, 540].forEach((delay) =>
-      window.setTimeout(() => emit("#ff5a1f", "bottom"), delay),
+  const handleSimulateError = () => {
+    triggerPacket("log");
+    triggerPacket("trace");
+    setErrors((prev) => prev + 1);
+    setMessage(
+      "POST /api/v1/pay - Exception: Credit card validation timeout (Trace status: ERROR)",
     );
-    window.setTimeout(() => setCpu(52), 4500);
+    // Highlight system change
+    setCpu((prev) => Math.min(99, prev + 12));
+  };
+
+  const handleSimulateSpike = () => {
+    setCpu(92);
+    setMessage("Load injection test trigger: Spiking container metrics to 92%");
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => triggerPacket("metric"), i * 150);
+      setTimeout(() => triggerPacket("log"), i * 200 + 50);
+    }
+    // recover CPU standard state over time
+    setTimeout(() => {
+      setCpu(52);
+    }, 6000);
   };
 
   return (
@@ -276,22 +321,22 @@ export function PipelineSandbox() {
         </h4>
         <div className="flex flex-wrap items-center gap-2">
           <button
-            onClick={success}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
+            onClick={handleSimulateSuccess}
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-blue-400 cursor-pointer transition-colors"
           >
             <Zap size={13} />
             Success trace
           </button>
           <button
-            onClick={exception}
+            onClick={handleSimulateError}
             className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
           >
             <HugeiconsIcon icon={Shield01Icon} size={13} />
             Exception
           </button>
           <button
-            onClick={spike}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
+            onClick={handleSimulateSpike}
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-orange-400 cursor-pointer transition-colors"
           >
             <HugeiconsIcon icon={Refresh01Icon} size={13} />
             Spike CPU

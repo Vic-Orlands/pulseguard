@@ -294,7 +294,7 @@ export default function Homepage() {
                     "shrink-0 w-1/2 flex items-center h-fit lg:px-8 transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
                     integrationView === "instrument"
                       ? "max-h-[1200px] opacity-100"
-                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100",
                   )}
                 >
                   <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
@@ -381,7 +381,7 @@ export default function Homepage() {
                     "shrink-0 w-1/2 flex items-start h-fit transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
                     integrationView === "telemetry"
                       ? "max-h-[1200px] opacity-100"
-                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100",
                   )}
                 >
                   <div className="w-full grid items-center gap-8 lg:gap-0 lg:grid-cols-2">
@@ -495,7 +495,14 @@ export default function Homepage() {
                   mass: 0.85,
                 }}
               >
-                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0">
+                <div
+                  className={clsx(
+                    "shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
+                    signalView === "arrivals"
+                      ? "max-h-[1400px] opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                  )}
+                >
                   <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                       <p className="pg-label">Test the signal</p>
@@ -567,7 +574,14 @@ export default function Homepage() {
                     </div>
                   </div>
                 </div>
-                <div className="shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0">
+                <div
+                  className={clsx(
+                    "shrink-0 w-1/2 flex items-start h-fit py-4 lg:py-0 transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden lg:overflow-visible lg:max-h-none",
+                    signalView === "architecture"
+                      ? "max-h-[1400px] opacity-100"
+                      : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
+                  )}
+                >
                   <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
                     <ArchitectureGraph />
                   </div>

@@ -1,22 +1,15 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { AiNetworkIcon, ArrowDown01Icon, CpuIcon, DatabaseIcon, Layers01Icon, LayoutGridIcon, RadioIcon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
-import {
-  ArrowDown,
-  Cpu,
-  Database,
-  Layers,
-  LayoutGrid,
-  Network,
-  Radio,
-} from "lucide-react";
 import { useTheme } from "next-themes";
 
 const nodes = {
   app: {
     name: "Next.js Application",
     sub: "Telemetry generation",
-    icon: Cpu,
+    icon: CpuIcon,
     details: [
       "Captures client-side exceptions with the TelemetryProvider",
       "Propagates request context across browser and backend boundaries",
@@ -26,7 +19,7 @@ const nodes = {
   otel: {
     name: "OpenTelemetry Collector",
     sub: "Filtering and routing",
-    icon: Network,
+    icon: AiNetworkIcon,
     details: [
       "Accepts OTLP HTTP and gRPC telemetry records",
       "Batches events and applies memory-aware processing",
@@ -36,7 +29,7 @@ const nodes = {
   loki: {
     name: "Grafana Loki",
     sub: "Structured log storage",
-    icon: Database,
+    icon: DatabaseIcon,
     details: [
       "Indexes stream labels for high-volume logs",
       "Retains trace identifiers for direct correlation",
@@ -46,7 +39,7 @@ const nodes = {
   tempo: {
     name: "Grafana Tempo",
     sub: "Trace waterfalls",
-    icon: Layers,
+    icon: Layers01Icon,
     details: [
       "Stores distributed trace waterfalls efficiently",
       "Lets teams inspect every span in one request path",
@@ -56,7 +49,7 @@ const nodes = {
   prometheus: {
     name: "Prometheus",
     sub: "Metrics backend",
-    icon: Radio,
+    icon: RadioIcon,
     details: [
       "Scrapes collector metrics continuously",
       "Supports alerts with standard PromQL rules",
@@ -66,7 +59,7 @@ const nodes = {
   grafana: {
     name: "Grafana Dashboards",
     sub: "Unified visualization",
-    icon: LayoutGrid,
+    icon: LayoutGridIcon,
     details: [
       "Brings logs, traces, and metrics into one workspace",
       "Makes cross-signal investigation immediate",
@@ -107,7 +100,7 @@ function NodeButton({
         borderColor: active ? "#ff5a1f" : isDark ? "#3b3b3b" : "#dfdfda",
       }}
     >
-      <Icon className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
+      <HugeiconsIcon icon={Icon} className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
       <span
         className="block text-xs font-medium text-[#272725] dark:text-white"
         style={{ color: isDark ? "#f5f5f5" : "#272725" }}
@@ -158,10 +151,7 @@ export function ArchitectureGraph() {
               onClick={() => setActiveKey("app")}
             />
           </div>
-          <ArrowDown
-            className="mx-auto my-3 text-[#b1b1ac] dark:text-[#4a4a4a]"
-            size={16}
-          />
+          <HugeiconsIcon icon={ArrowDown01Icon} className="mx-auto my-3 text-[#b1b1ac] dark:text-[#4a4a4a]" size={16} />
           <div className="flex justify-center">
             <NodeButton
               nodeKey="otel"
@@ -227,7 +217,7 @@ export function ArchitectureGraph() {
               className="grid size-10 place-items-center rounded-lg border border-[#dfdfda] text-[#ff5a1f] dark:border-[#3b3b3b]"
               style={{ borderColor }}
             >
-              <ActiveIcon size={18} />
+              <HugeiconsIcon icon={ActiveIcon} size={18} />
             </span>
           </div>
           <ul className="mt-6 space-y-4">

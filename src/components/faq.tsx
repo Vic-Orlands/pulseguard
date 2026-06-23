@@ -1,8 +1,8 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowDown01Icon, ArrowUp01Icon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-
 const faqs = [
   {
     question: "What is OpenTelemetry (OTel), and how does PulseGuard use it?",
@@ -67,9 +67,9 @@ export function LandingFaq() {
                   </span>
                   <span className="grid size-7 shrink-0 place-items-center rounded-lg border border-[#dfdfda] text-[#777772] dark:border-[#3b3b3b] dark:text-[#a3a3a3]">
                     {isOpen ? (
-                      <ChevronUp size={14} />
+                      <HugeiconsIcon icon={ArrowUp01Icon} size={14} />
                     ) : (
-                      <ChevronDown size={14} />
+                      <HugeiconsIcon icon={ArrowDown01Icon} size={14} />
                     )}
                   </span>
                 </button>

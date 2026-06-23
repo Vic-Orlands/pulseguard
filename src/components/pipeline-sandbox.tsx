@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Activity,
-  Database,
-  Radio,
-  RefreshCw,
-  Server,
-  Shield,
-  Zap,
-} from "lucide-react";
-import { motion } from "framer-motion";
+  Activity01Icon,
+  DatabaseIcon,
+  RadioIcon,
+  Refresh01Icon,
+  Shield01Icon,
+} from "@hugeicons/core-free-icons";
+import { useEffect, useState } from "react";
+import { Server, Zap } from "lucide-react";
+import { motion } from "motion/react";
 
 type Packet = {
   id: number;
@@ -181,7 +181,7 @@ export function PipelineSandbox() {
         {/* Node 2: OTel Collector */}
         <div className="absolute left-[42%] top-1/2 -translate-y-1/2 text-center">
           <div className="grid size-14 place-items-center rounded-full border border-[#ff5a1f] bg-[#ff5a1f]/10 text-[#ff5a1f] shadow-[0_0_15px_rgba(255,90,31,0.15)]">
-            <Activity size={18} />
+            <HugeiconsIcon icon={Activity01Icon} size={18} />
           </div>
           <span className="mt-1 block font-mono text-[8px] uppercase text-[#a3a3a3]">
             OTel
@@ -191,7 +191,7 @@ export function PipelineSandbox() {
         {/* Node 3A: Loki (Logs) */}
         <div className="absolute left-[72%] top-[15%] text-center">
           <div className="grid size-10 place-items-center rounded-lg border text-purple-400 border-[#3b3b3b] bg-[#121212] shadow-sm">
-            <Database size={15} />
+            <HugeiconsIcon icon={DatabaseIcon} size={15} />
           </div>
           <span className="mt-1 block font-mono text-[8px] uppercase text-[#a3a3a3]">
             Logs
@@ -211,7 +211,7 @@ export function PipelineSandbox() {
         {/* Node 3C: Prometheus (Metrics) */}
         <div className="absolute left-[72%] bottom-[12%] text-center">
           <div className="grid size-10 place-items-center rounded-lg border border-[#3b3b3b] bg-[#121212] text-[#ff5a1f] shadow-sm">
-            <Radio size={15} />
+            <HugeiconsIcon icon={RadioIcon} size={15} />
           </div>
           <span className="mt-1 block font-mono text-[8px] uppercase text-[#a3a3a3]">
             Metrics
@@ -286,14 +286,14 @@ export function PipelineSandbox() {
             onClick={exception}
             className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
           >
-            <Shield size={13} />
+            <HugeiconsIcon icon={Shield01Icon} size={13} />
             Exception
           </button>
           <button
             onClick={spike}
             className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] hover:border-[#ff5a1f] border-[#3b3b3b] text-[#d4d4d4] cursor-pointer transition-colors"
           >
-            <RefreshCw size={13} />
+            <HugeiconsIcon icon={Refresh01Icon} size={13} />
             Spike CPU
           </button>
         </div>

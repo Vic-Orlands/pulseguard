@@ -1,25 +1,24 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowRight01Icon,
+  ClipboardIcon,
+  Delete02Icon,
+  MoonIcon,
+  Sun01Icon,
+  TerminalIcon,
+  Tick01Icon,
+} from "@hugeicons/core-free-icons";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import {
-  ArrowRight,
-  Check,
-  ChevronRight,
-  Clipboard,
-  Moon,
-  Sun,
-  Terminal,
-  Trash2,
-} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { PulseGuardLogo } from "@/components/Icons";
 import { LandingFaq } from "@/components/faq";
 import { ArchitectureGraph } from "@/components/architecture-graph";
 import { PipelineSandbox } from "@/components/pipeline-sandbox";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
   NewTwitterIcon,
   Mail01Icon,
@@ -176,7 +175,11 @@ export default function Homepage() {
                 aria-label="Toggle theme"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               >
-                {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+                {theme === "dark" ? (
+                  <HugeiconsIcon icon={Sun01Icon} size={14} />
+                ) : (
+                  <HugeiconsIcon icon={MoonIcon} size={14} />
+                )}
               </button>
             )}
             <button
@@ -212,7 +215,8 @@ export default function Homepage() {
                 className="flex items-center gap-2 text-xs font-light"
                 onClick={() => scrollToSection("integrate")}
               >
-                Explore the docs <ArrowRight size={14} />
+                Explore the docs{" "}
+                <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
               </button>
             </div>
             <div className="mt-10 sm:mt-16 lg:mt-20 w-full max-w-6xl overflow-hidden rounded-2xl border border-[#e1e1dc] bg-white shadow-[0_22px_50px_rgba(30,30,20,.07)]">
@@ -349,9 +353,9 @@ export default function Homepage() {
                           onClick={copy}
                         >
                           {copied ? (
-                            <Check size={14} />
+                            <HugeiconsIcon icon={Tick01Icon} size={14} />
                           ) : (
-                            <Clipboard size={14} />
+                            <HugeiconsIcon icon={ClipboardIcon} size={14} />
                           )}
                           {copied ? "Copied" : "Copy"}
                         </button>
@@ -498,7 +502,8 @@ export default function Homepage() {
                             onClick={() => dispatch(type)}
                             className="flex items-center gap-2 text-sm font-medium hover:text-[#ff5a1f]"
                           >
-                            Dispatch {type} <ChevronRight size={14} />
+                            Dispatch {type}{" "}
+                            <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
                           </button>
                         ),
                       )}
@@ -507,7 +512,7 @@ export default function Homepage() {
                         onClick={() => setFeed([])}
                         className="flex items-center gap-2 text-sm text-[#777772] disabled:opacity-35"
                       >
-                        <Trash2 size={14} />
+                        <HugeiconsIcon icon={Delete02Icon} size={14} />
                         Clear
                       </button>
                     </div>
@@ -523,7 +528,7 @@ export default function Homepage() {
                       {feed.length === 0 ? (
                         <div className="grid h-full place-items-center text-center text-[#777772] dark:text-neutral-500">
                           <div>
-                            <Terminal className="mx-auto mb-3" size={23} />
+                            <HugeiconsIcon icon={TerminalIcon} size={23} />
                             Dispatch a signal to inspect the payload.
                           </div>
                         </div>
@@ -573,7 +578,8 @@ export default function Homepage() {
               className="pg-action pg-action-primary mt-10"
               onClick={() => authenticate("signup")}
             >
-              Create your project <ArrowRight size={16} />
+              Create your project{" "}
+              <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
             </button>
           </div>
         </section>

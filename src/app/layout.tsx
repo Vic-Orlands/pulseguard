@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
 const geistSans = Inter({
   variable: "--font-inter",
@@ -20,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: "PulseGuard",
   description:
-    "A full-stack error tracking and monitoring tool for your web apps.",
+    "An intelligent, error tracking and monitoring tool for your web apps.",
   icons: {
     icon: "/icon",
     shortcut: "/icon",
@@ -29,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PulseGuard",
     description:
-      "A full-stack error tracking and monitoring tool for your web apps.",
+      "An intelligent, error tracking and monitoring tool for your web apps.",
     url: baseUrl,
     siteName: "PulseGuard",
     images: [
@@ -59,13 +57,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <div className="min-h-screen">{children}</div>
-        <Footer />
+        {children}
       </body>
     </html>
   );

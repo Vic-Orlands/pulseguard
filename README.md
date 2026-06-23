@@ -18,8 +18,8 @@ cd pulseguard
 ### 2. Install and Start Your App
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ---

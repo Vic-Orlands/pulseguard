@@ -1,28 +1,19 @@
-# PulseGuard
+# PulseGuard Site
 
-## Overview
+Marketing site for [PulseGuard](https://github.com/Vic-Orlands/pulseguard-app), a full-stack observability workspace for investigating errors alongside the logs, metrics, sessions, and distributed traces that explain them.
 
-PulseGuard is a full-stack observability and telemetry platform for modern cloud applications. It integrates structured logging, distributed tracing, and metrics collection into a unified observability pipeline using OpenTelemetry and Grafana's ecosystem (Loki, Tempo, Prometheus, and Grafana).
+- [Product repository](https://github.com/Vic-Orlands/pulseguard-app)
+- [Live marketing site](https://pulseguard-phi.vercel.app/)
 
----
+## Repository map
 
-## Setup Instructions
+This repository contains the public marketing experience. Product application code, architecture, infrastructure, and setup documentation live in [`pulseguard-app`](https://github.com/Vic-Orlands/pulseguard-app).
 
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/Vic-Orlands/pulseguard
-cd pulseguard
-```
-
-### 2. Install and Start Your App
+## Develop
 
 ```bash
+git clone https://github.com/Vic-Orlands/pulseguard-site
+cd pulseguard-site
 pnpm install
 pnpm dev
 ```
-
----
-
-### Main App
-[Pulseguard App](https://github.com/Vic-Orlands/pulseguard-app)

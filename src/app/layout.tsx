@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -69,6 +70,12 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Script
+          id="counterscale-script"
+          src="https://pulse-analytics.chimezieinnocent39.workers.dev/tracker.js?v=3.5.0"
+          strategy="afterInteractive"
+          data-site-id="pulseguard"
+        />
       </body>
     </html>
   );

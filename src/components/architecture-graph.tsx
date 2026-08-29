@@ -1,6 +1,6 @@
 "use client";
 
-import { HugeiconsIcon } from "@hugeicons/react";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import {
   ArrowDown01Icon,
   CpuIcon,
@@ -103,7 +103,7 @@ function NodeButton({
         <LayoutGrid className="mx-auto mb-1.5 text-[#ff5a1f]" size={16} />
       ) : (
         <HugeiconsIcon
-          icon={Icon as any}
+          icon={Icon as IconSvgElement}
           className="mx-auto mb-1.5 text-[#ff5a1f]"
           size={16}
         />
@@ -197,7 +197,7 @@ export function ArchitectureGraph() {
               ) : activeNode.name === "Dashboards" ? (
                 <LayoutGrid size={18} />
               ) : (
-                <HugeiconsIcon icon={ActiveIcon as any} size={18} />
+                <HugeiconsIcon icon={ActiveIcon as IconSvgElement} size={18} />
               )}
             </span>
           </div>

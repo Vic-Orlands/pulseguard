@@ -30,20 +30,7 @@ export function PipelineSandbox() {
   );
   const packetIdCounter = useRef(0);
 
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      // Trickle normal metrics
-      triggerPacket("metric");
-      setCpu((prev) => {
-        const drift = Math.floor(Math.random() * 5) - 2;
-        return Math.max(15, Math.min(65, prev + drift));
-      });
-      setRequests((prev) => prev + (Math.random() > 0.6 ? 2 : -1));
-    }, 3800);
-    return () => clearInterval(timer);
-  }, []);
-
-  const triggerPacket = (type: "log" | "trace" | "metric") => {
+  function triggerPacket(type: "log" | "trace" | "metric") {
     const colors = {
       log: "#a855f7",
       trace: "#3b82f6",
@@ -82,7 +69,19 @@ export function PipelineSandbox() {
         // Log hit
       }
     }, 2000);
-  };
+  }
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      triggerPacket("metric");
+      setCpu((prev) => {
+        const drift = Math.floor(Math.random() * 5) - 2;
+        return Math.max(15, Math.min(65, prev + drift));
+      });
+      setRequests((prev) => prev + (Math.random() > 0.6 ? 2 : -1));
+    }, 3800);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSimulateSuccess = () => {
     triggerPacket("trace");

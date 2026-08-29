@@ -11,7 +11,7 @@ import {
   Tick01Icon,
 } from "@hugeicons/core-free-icons";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "motion/react";
 import { PulseGuardLogo } from "@/components/Icons";
@@ -62,6 +62,7 @@ req.Header.Set("Content-Type", "application/json")`,
 };
 
 const dashboardScreens = ["overview", "logs", "traces", "errors", "metrics"];
+const subscribeToClient = () => () => {};
 
 function SoftSignal() {
   return (
@@ -74,19 +75,22 @@ function SoftSignal() {
 
 export default function Homepage() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    subscribeToClient,
+    () => true,
+    () => false,
+  );
   const [tab, setTab] = useState<Tab>("react");
   const [copied, setCopied] = useState(false);
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [integrationView, setIntegrationView] =
     useState<IntegrationView>("instrument");
-  const [integrationDirection, setIntegrationDirection] = useState(1);
+  const [, setIntegrationDirection] = useState(1);
   const [signalView, setSignalView] = useState<SignalView>("arrivals");
-  const [signalDirection, setSignalDirection] = useState(1);
+  const [, setSignalDirection] = useState(1);
   const [activeScreen, setActiveScreen] = useState(0);
   const feedRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (feedRef.current)
       feedRef.current.scrollTop = feedRef.current.scrollHeight;

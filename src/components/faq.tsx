@@ -5,6 +5,11 @@ import { ArrowDown01Icon, ArrowUp01Icon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
 const faqs = [
   {
+    question: "How do I send errors from my app?",
+    answer:
+      "Install the pulseguard npm package and pass the project DSN from the Connect tab. Customer apps authenticate with that key, not your PulseGuard login.",
+  },
+  {
     question: "What is OpenTelemetry (OTel), and how does PulseGuard use it?",
     answer:
       "OpenTelemetry is a vendor-neutral standard for collecting logs, traces, and metrics. PulseGuard integrates with OTel SDKs in your frontend and backend services, then routes the captured data through its collector into structured log, trace, and metric pipelines.",

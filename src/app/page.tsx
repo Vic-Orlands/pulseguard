@@ -12,7 +12,6 @@ import {
 } from "@hugeicons/core-free-icons";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "motion/react";
 import { PulseGuardLogo } from "@/components/Icons";
@@ -27,6 +26,8 @@ import {
 } from "@hugeicons/core-free-icons";
 import clsx from "clsx";
 
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://pulseguard-phi.vercel.app";
 type Tab = "react" | "node" | "go";
 type EventType = "error" | "log" | "metric" | "trace";
 type IntegrationView = "instrument" | "telemetry";
@@ -39,22 +40,25 @@ type FeedItem = {
 };
 
 const samples: Record<Tab, string> = {
-  react: `import { TelemetryProvider } from "@pulseguard/react";
+  react: `import { TelemetryProvider } from "pulseguard";
 
 export default function RootLayout({ children }) {
-  return <TelemetryProvider projectId="your-project-id">
+  return <TelemetryProvider dsn="https://pg_key@api.pulseguard.dev/project-id">
             {children}
          </TelemetryProvider>;
 }`,
-  node: `import { NodeSDK } from "@opentelemetry/sdk-node";
+  node: `import { initPulseguard, reportError } from "pulseguard";
 
-const sdk = new NodeSDK({ serviceName: "checkout-api" });
-sdk.start();`,
-  go: `shutdown, err := otel.Init(ctx, otel.Config{
-  ProjectID: "your-project-id",
-  Service: "checkout-api",
-})
-defer shutdown(ctx)`,
+initPulseguard({
+  dsn: "https://pg_key@api.pulseguard.dev/project-id",
+  environment: "production",
+});
+
+reportError(new Error("Checkout failed"));`,
+  go: `req, _ := http.NewRequest("POST", ingest+"/api/ingest/error", body)
+req.Header.Set("X-PulseGuard-Key", "pg_key")
+req.Header.Set("X-Project-ID", "project-id")
+req.Header.Set("Content-Type", "application/json")`,
 };
 
 const dashboardScreens = ["overview", "logs", "traces", "errors", "metrics"];
@@ -69,7 +73,6 @@ function SoftSignal() {
 }
 
 export default function Homepage() {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [tab, setTab] = useState<Tab>("react");
@@ -98,8 +101,7 @@ export default function Homepage() {
   }, []);
 
   const authenticate = (mode: "login" | "signup") => {
-    localStorage.setItem("auth_mode", mode);
-    router.push("/signin");
+    window.location.href = `${APP_URL}/signin?mode=${mode}`;
   };
 
   const scrollToSection = (id: string) => {
